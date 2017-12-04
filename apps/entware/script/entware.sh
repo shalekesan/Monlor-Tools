@@ -35,6 +35,11 @@ install() {
 		else
 			logsh "【Tools】" "不支持你的路由器！"
 		fi
+		if [ $? -ne 0 ]; then
+			logsh "【Tools】" "【$appname】服务安装失败"
+			umount -lf /opt
+			rm -rf $path
+		fi
 	fi
 	[ ! -f $BIN ] && mount $path /opt
 	result=$(cat /etc/profile | grep "/opt/sbin" | wc -l)
@@ -46,7 +51,7 @@ install() {
 start () {
 
 	result=$(ps | grep "$appname" | grep -v grep | wc -l)
-    	if [ "$result" != '0' ];then
+    	if [ "$result" -gt '2' ];then
 		logsh "【$service】" "$appname已经在运行！"
 		exit 1
 	fi

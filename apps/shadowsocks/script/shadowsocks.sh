@@ -177,7 +177,7 @@ load_nat() {
 start() {
 
 	[ ! -s $SER_CONF ] && logsh "【$service】" "没有添加ss服务器!" && exit 
-	result=$(ps | grep ss-redir | grep -v grep | wc -l)
+	result=$(ps | grep -E 'ss-redir|ssr-redir' | grep -v grep | wc -l)
 	if [ "$result" != '0'  ];then
 		logsh "【$service】" "SS已经在运行！"	
 		exit

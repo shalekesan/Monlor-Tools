@@ -1,6 +1,6 @@
 appname=entware #monlor-entware
 App_enable=$(uci get monlor.$appname.enable)  #monlor-entware
-result=$(ls /opt/ | grep etc | grep -v grep | wc -l)  #monlor-entware
+result=$(ls /opt/ | grep etc | wc -l)  #monlor-entware
 if [ "$App_enable" = '1' ];then  #monlor-entware
 	if [ `uci get monlor.$appname.restart` -eq 1 ]; then  #monlor-entware
 		logsh "【Entware】" "entware配置已修改，正在重启entware服务..."  #monlor-entware
