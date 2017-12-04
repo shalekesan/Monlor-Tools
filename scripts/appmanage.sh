@@ -57,7 +57,7 @@ add() {
 	fi
 	echo " [ \`uci get monlor.$appname.enable\` -eq 1 ] && $monlorpath/apps/$appname/script/$appname.sh restart" >> $monlorpath/scripts/dayjob.sh
 	install_line=`cat $monlorconf | grep -n install_$appname | cut -d: -f1`
-	sed -i ""$install_line"s/0/1/" $monlorconf
+	[ ! -z "$install_line" ] && sed -i ""$install_line"s/0/1/" $monlorconf
 	#清除临时文件
 	rm -rf $monlorpath/apps/$appname/install/
 	# rm -rf /tmp/$appname
@@ -119,7 +119,7 @@ del() {
 	ssline2=$(cat $monlorconf | grep -ni "【$appname】" | tail -1 | cut -d: -f1)
 	sed -i ""$ssline1","$ssline2"d" $monlorconf > /dev/null 2>&1
 	install_line=`cat $monlorconf | grep -n install_$appname | cut -d: -f1`           
-        sed -i ""$install_line"s/1/0/" $monlorconf 
+        [ ! -z "$install_line" ] && sed -i ""$install_line"s/1/0/" $monlorconf 
         logsh "【Tools】" "插件卸载完成"
 
 }
