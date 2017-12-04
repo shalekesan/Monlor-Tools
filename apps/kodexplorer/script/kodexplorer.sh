@@ -17,14 +17,6 @@ PHPCONF=/opt/etc/php.ini
 WWW=/opt/share/nginx/html
 LOG=/var/log/$appname.log
 
-result1=$(uci -q get monlor.entware)
-result2=$(ls /opt | grep etc)
-result3=$(echo $PATH | grep opt)
-if [ -z "$result1" ] || [ -z "$result2" ] || [ -z "$result3" ]; then 
-	logsh "【$service】" "检测到【Entware】服务未启动"
-	exit
-fi
-
 set_config() {
 
 	if [ ! -f $PHPBIN ] || [ ! -f $NGINXBIN ]; then
@@ -69,12 +61,20 @@ set_config() {
 
 start () {
 
-	result=$(ps | grep nginx | grep -v sysa | grep -v grep | wc -l)
-    if [ "$result" != '0' ];then
+	result=$(ps | grep -E 'nginx|php-cgi' | grep -v sysa | grep -v grep | wc -l)
+    	if [ "$result" != '0' ];then
 		logsh "【$service】" "$appname已经在运行！"
 		exit 1
 	fi
 	logsh "【$service】" "正在启动$appname服务... "
+	#检查entware状态
+	result1=$(uci -q get monlor.entware)
+	result2=$(ls /opt | grep etc)
+	result3=$(echo $PATH | grep opt)
+	if [ -z "$result1" ] || [ -z "$result2" ] || [ -z "$result3" ]; then 
+		logsh "【$service】" "检测到【Entware】服务未启动"
+		exit
+	fi
 
 	set_config
 	
