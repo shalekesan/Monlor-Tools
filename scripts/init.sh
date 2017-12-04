@@ -57,5 +57,13 @@ if [ "$ssh_enable" == '1' -a "$ssh_enabled" == '0' ]; then
 	iptables -I INPUT -p tcp --dport 22 -m comment --comment "monlor-ssh" -j ACCEPT > /dev/null 2>&1
 fi
 
+samba_path=$(uci -q get monlor.tools.samba_path)
+if [ ! -z "$samba_path" ]; then
+	cp /etc/samba/smb.conf /tmp/smb.conf.bak
+	sambaline=$(grep -A 1 -n "XiaoMi" /etc/samba/smb.conf | tail -1 | cut -d- -f1)
+	sed -i ""$sambaline"s#.*#        path = $samba_path#" /etc/samba/smb.conf
+	[ $? -ne 0 ] && mv /tmp/smb.conf.bak /etc/samba/smb.conf || rm -rf /tmp/smb.conf.bak
+fi
+
 $monlorpath/scripts/userscript.sh
 
