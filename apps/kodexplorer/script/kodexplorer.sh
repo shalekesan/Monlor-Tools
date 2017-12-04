@@ -16,11 +16,11 @@ NGINXCONF=/opt/etc/nginx/nginx.conf
 PHPCONF=/opt/etc/php.ini
 WWW=/opt/share/nginx/html
 LOG=/var/log/$appname.log
-PATH=$(uci get monlor.$appname.path)
 
 result1=$(uci -q get monlor.entware)
 result2=$(ls /opt | grep etc)
-if [ "$result1" == '0' -o "$result2" == '0' ]; then
+result3=$(echo $PATH | grep opt)
+if [ -z "$result1" ] || [ -z "$result2" ] || [ -z "$result3" ]; then 
 	logsh "【$service】" "检测到【Entware】服务未启动"
 	exit
 fi
@@ -39,6 +39,7 @@ set_config() {
 		sed -i '65,71s/#//g' $NGINXCONF
 		sed -i 's#root           html#root           /opt/share/nginx/html#' $NGINXCONF
 		sed -i '65,71s/\/scripts/\$document_root/' $NGINXCONF
+		sed -i '65,71s/9000/9009/' $NGINXCONF
 		#修改php配置文件
 		logsh "【$service】" "修改php配置文件"
 		docline=`cat $PHPCONF | grep -n doc_root | cut -d: -f1 | tail -1`
@@ -54,9 +55,16 @@ set_config() {
 		curl -sLo /tmp/kodexplorer.zip $monlorurl/temp/kodexplorer.zip
 		[ $? -ne 0 ] && logsh "【$service】" "$appname文件下载失败" && exit
 		unzip /tmp/kodexplorer.zip -d $WWW
+		rm -rf /tmp/kodexplorer.zip
 	fi
-	mount -o blind $PATH $WWW/data/User/admin/home
-
+	path=$(uci get monlor.$appname.path)
+	if [ ! -z "$path" ]; then
+		if [ -d $WWW/data/User/admin/home ]; then
+			mount -o blind $path $WWW/data/User/admin/home
+		else
+			logsh "【$service】" "检测到$appname服务未配置，无法挂载管理目录"
+		fi
+	fi
 }
 
 start () {
@@ -71,24 +79,25 @@ start () {
 	set_config
 	
 	iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
-	/opt/etc/init.d/S80nginx start >> /tmp/messages
+	/opt/etc/init.d/S80nginx start >> /tmp/messages 2>&1
 	if [ $? -ne 0 ]; then
 		logsh "【$service】" "启动nginx服务失败！"
 		exit
 	fi
-	service_start $PHPBIN -a 127.0.0.1 -p 9000 -C 2 -f /opt/bin/php-cgi 
+	$PHPBIN -a 127.0.0.1 -p 9009 -C 2 -f /opt/bin/php-cgi >> /tmp/messages 2>&1   
 	if [ $? -ne 0 ]; then
                 logsh "【$service】" "启动php服务失败！"
 		exit
         fi
+        logsh "【$service】" "$appname服务启动完成"
 
 }
 
 stop () {
 
 	logsh "【$service】" "正在停止$appname服务... "
-	/opt/etc/init.d/S80nginx stop >> /tmp/messages
-	killall php-cgi >> /tmp/messages
+	/opt/etc/init.d/S80nginx stop >> /tmp/messages 2>&1
+	killall php-cgi >> /tmp/messages 2>&1
 	umount $WWW/data/User/admin/home > /dev/null 2>&1
 	iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
 

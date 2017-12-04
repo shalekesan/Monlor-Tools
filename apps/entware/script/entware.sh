@@ -13,7 +13,7 @@ appname=entware
 BIN=/opt/etc/init.d/rc.unslung
 # CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
-path=$(uci get monlor.$appname.path)
+path=$(uci get monlor.$appname.path) > /dev/null 2>&1
 
 install() {
 
@@ -46,6 +46,7 @@ install() {
 	[ "$result" == '0' ] && sed -i "s/PATH=/PATH=\/opt\/bin:\/opt\/sbin:/" /etc/profile
 	result=$(cat /etc/profile | grep "LD_LIBRARY_PATH" | wc -l)
 	[ "$result" == '0' ] && sed -i "/PS1/a\export LD_LIBRARY_PATH=\/usr\/lib:\/lib:\/opt\/lib" /etc/profile
+	source /etc/profile > /dev/null 2>&1
 }
 
 start () {
