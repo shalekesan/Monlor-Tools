@@ -38,6 +38,12 @@ coding() {
 	git push origin master
 }
 
+test() {
+	git remote rm origin
+	git remote add origin https://git.coding.net/monlor/Monlor-Test.git
+	git push origin master
+}
+
 case $1 in 
 	all) 
 		pack
@@ -55,5 +61,9 @@ case $1 in
 		;;
 	pack) 
 		pack
+		;;
+	test)
+		localgit
+		test
 		;;
 esac

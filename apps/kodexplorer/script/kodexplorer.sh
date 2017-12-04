@@ -89,7 +89,7 @@ stop () {
 	logsh "【$service】" "正在停止$appname服务... "
 	/opt/etc/init.d/S80nginx stop >> /tmp/messages
 	killall php-cgi >> /tmp/messages
-	umoount $PATH > /dev/null 2>&1
+	umount $WWW/data/User/admin/home > /dev/null 2>&1
 	iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
 
 }
