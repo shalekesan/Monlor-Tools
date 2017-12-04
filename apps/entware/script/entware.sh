@@ -22,6 +22,12 @@ install() {
 		logsh "【$service】" "未配置安装路径！" 
 		exit
 	fi
+	[ ! -f $BIN ] && mount $path /opt
+	result=$(cat /etc/profile | grep "/opt/sbin" | wc -l)
+	[ "$result" == '0' ] && sed -i "s/PATH=/PATH=\/opt\/bin:\/opt\/sbin:/" /etc/profile
+	result=$(cat /etc/profile | grep "LD_LIBRARY_PATH" | wc -l)
+	[ "$result" == '0' ] && sed -i "/PS1/a\export LD_LIBRARY_PATH=\/usr\/lib:\/lib:\/opt\/lib" /etc/profile
+	
 	if [ ! -f $path/etc/init.d/rc.unslung ]; then
 		logsh "【$service】" "检测到第一次运行$appname服务，正在安装..."
 		mkdir -p $path > /dev/null 2>&1
@@ -40,13 +46,8 @@ install() {
 			umount -lf /opt
 			rm -rf $path
 		fi
+		source /etc/profile > /dev/null 2>&1
 	fi
-	[ ! -f $BIN ] && mount $path /opt
-	result=$(cat /etc/profile | grep "/opt/sbin" | wc -l)
-	[ "$result" == '0' ] && sed -i "s/PATH=/PATH=\/opt\/bin:\/opt\/sbin:/" /etc/profile
-	result=$(cat /etc/profile | grep "LD_LIBRARY_PATH" | wc -l)
-	[ "$result" == '0' ] && sed -i "/PS1/a\export LD_LIBRARY_PATH=\/usr\/lib:\/lib:\/opt\/lib" /etc/profile
-	source /etc/profile > /dev/null 2>&1
 }
 
 start () {

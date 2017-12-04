@@ -71,4 +71,6 @@
 	
 	2017-12-04
 		1. 修复了ss脚本bug, ssr已测试正常, ssr游戏模式测试正常
+		2. 增加kodexplorer网页文件管理插件，需配合entware安装nginx+php环境
+		3. 可以用update.sh命令或者修改配置文件更新下工具箱脚本
 
