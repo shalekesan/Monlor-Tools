@@ -1,19 +1,20 @@
 # Monlor-Tools
 	工具箱正处于测试状态，需要安装的注意一下，要有一定的动手能力，出问题会用U盘刷固件。
 	目前支持了以下几种插件:
-		1. ShadowSocks
-		2. KoolProxy
-		3. Aria2
-		4. VsFtpd
-		5. Kms
-		6. Frpc
-		7. WebShell
-		8. TinyProxy
-		9. Entware
-		10. KodExplorer
-		11. EasyExplorer
-	因为不会js所以没有web界面，完全靠Shell开发，插件的安装、卸载、配置由配置文件完成。
+	1. ShadowSocks
+	2. KoolProxy
+	3. Aria2
+	4. VsFtpd
+	5. Kms
+	6. Frpc
+	7. WebShell
+	8. TinyProxy
+	9. Entware
+	10. KodExplorer
+	11. EasyExplorer
+	工具箱没有web界面，完全靠Shell开发，插件的安装、卸载、配置由配置文件完成。
 	配置文件也是一个Shell脚本，请按要求正确的修改配置文件。
+	才疏学浅，但有一颗学习和折腾的心！
 		
 ## 安装方式：  
 #### 	手动安装插件
