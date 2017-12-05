@@ -71,9 +71,9 @@
 	
 	2017-12-04
 		1. 修复了ss脚本bug, ssr已测试正常, ssr游戏模式测试正常
-		2. 增加kodexplorer网页文件管理插件，需配合entware安装nginx+php环境
+		2. 增加KodExplorer网页文件管理插件，需配合entware安装nginx+php环境
 		3. 可以用update.sh命令或者修改配置文件更新下工具箱脚本
 
 	2017-12-05
-		1. 增加easykodexplorer插件，一款跨设备、点对点文件传输同步工具，详情：http://koolshare.cn/thread-129199-1-1.html
+		1. 增加EasyKodexplorer插件，一款跨设备、点对点文件传输同步工具，详情：http://koolshare.cn/thread-129199-1-1.html
 
