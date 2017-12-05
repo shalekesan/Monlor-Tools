@@ -14,12 +14,13 @@ BIN=$monlorpath/apps/$appname/bin/$appname
 CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
 
-[ "$model" != "arm" ] && logsh "【$service】" "$appname服务仅支持arm路由器"
+[ "$model" != "arm" ] && logsh "【$service】" "$appname服务仅支持arm路由器" && appmanage.sh del $appname && exit
 
 set_config() {
 
 	path=$(uci -q get monlor.$appname.share_path)
 	[ -z "$path" ] && logsh "【$service】" "未配置$appname的共享目录"
+	[ ! -d "$path" ] && mkdir -p $path 
 	token=$(uci -q get monlor.$appname.token)
 	[ -z "$token" ] && logsh "【$service】" "未配置$appname的密钥"
 
@@ -28,7 +29,7 @@ set_config() {
 start () {
 
 	result=$(ps | grep $BIN | grep -v grep | wc -l)
-    if [ "$result" != '0' ];then
+    	if [ "$result" != '0' ];then
 		logsh "【$service】" "$appname已经在运行！"
 		exit 1
 	fi
