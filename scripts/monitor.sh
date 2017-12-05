@@ -37,6 +37,7 @@ samba_path=$(uci -q get monlor.tools.samba_path)
 if [ ! -z "$samba_path" ]; then
 	result=$(cat /etc/samba/smb.conf | grep -A 5 XiaoMi | grep -wc $samba_path)
 	if [ "$result" == '0' ]; then
+		logsh "【Tools】" "检测到samba路径被系统修改，准备恢复"
 		cp /etc/samba/smb.conf /tmp/smb.conf.bak
 		sambaline=$(grep -A 1 -n "XiaoMi" /etc/samba/smb.conf | tail -1 | cut -d- -f1)
 		sed -i ""$sambaline"s#.*#        path = $samba_path#" /etc/samba/smb.conf
