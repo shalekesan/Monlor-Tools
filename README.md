@@ -10,6 +10,8 @@
 		7. WebShell
 		8. TinyProxy
 		9. Entware
+		10. KodExplorer
+		11. EasyExplorer
 	因为不会js所以没有web界面，完全靠Shell开发，插件的安装、卸载、配置由配置文件完成。
 	配置文件也是一个Shell脚本，请按要求正确的修改配置文件。
 		
