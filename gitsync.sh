@@ -28,7 +28,7 @@ localgit() {
 
 github() {
 	git remote rm origin
-	git remote add origin https://github.com/monlor/Monlor-Tools.git 
+	git remote add origin https://github.com/monlor/Monlor-Tools.git
 	git push origin master
 }
 
