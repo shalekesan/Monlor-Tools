@@ -27,7 +27,7 @@ set_config() {
 start () {
 
 	if [ "$model" != "arm" ]; then
-		logsh "【$service】" "$appname服务仅支持arm路由器" 
+		logsh "【$service】" "$appname服务仅支持arm路由器，准备卸载" 
 		$monlorpath/scripts/appmanage.sh del $appname 
 		exit
 	fi
