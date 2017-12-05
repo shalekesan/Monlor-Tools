@@ -32,6 +32,17 @@ if [ "$result" == '1' ]; then
 	$monlorpath/scripts/update.sh
 	[ $? -ne 0 ] && logsh "【Tools】" "更新失败！" && exit
 fi
+#检查samba共享目录
+samba_path=$(uci -q get monlor.tools.samba_path)
+if [ ! -z "$samba_path" ]; then
+	result=$(cat /etc/samba/smb.conf | grep -A 5 XiaoMi | grep -wc $samba_path)
+	if [ "$result" == '0' ]; then
+		cp /etc/samba/smb.conf /tmp/smb.conf.bak
+		sambaline=$(grep -A 1 -n "XiaoMi" /etc/samba/smb.conf | tail -1 | cut -d- -f1)
+		sed -i ""$sambaline"s#.*#        path = $samba_path#" /etc/samba/smb.conf
+		[ $? -ne 0 ] && mv /tmp/smb.conf.bak /etc/samba/smb.conf || rm -rf /tmp/smb.conf.bak
+	fi
+fi
 
 #监控运行状态
 
