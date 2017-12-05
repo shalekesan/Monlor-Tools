@@ -70,10 +70,12 @@ start () {
 	#检查entware状态
 	result1=$(uci -q get monlor.entware)
 	result2=$(ls /opt | grep etc)
-	result3=$(echo $PATH | grep opt)
-	if [ -z "$result1" ] || [ -z "$result2" ] || [ -z "$result3" ]; then 
+	if [ -z "$result1" ] || [ -z "$result2" ]; then 
 		logsh "【$service】" "检测到【Entware】服务未启动"
 		exit
+	else
+		result3=$(echo $PATH | grep opt)
+		[ -z "$result3" ] && export PATH=/opt/bin/:/opt/sbin:$PATH
 	fi
 
 	set_config

@@ -1,6 +1,6 @@
 appname=kodexplorer #monlor-kodexplorer
 App_enable=$(uci get monlor.$appname.enable)  #monlor-kodexplorer
-result=$(ps | grep nginx | grep -v sysa | grep -v grep | wc -l)  #monlor-kodexplorer
+result=$(ps | grep -E 'nginx|php-cgi' | grep -v sysa | grep -v grep | wc -l)  #monlor-kodexplorer
 if [ "$App_enable" = '1' ];then  #monlor-kodexplorer
 	if [ `uci get monlor.$appname.restart` -eq 1 ]; then  #monlor-kodexplorer
 		logsh "【KodExplorer】" "kodexplorer配置已修改，正在重启kodexplorer服务..."  #monlor-kodexplorer
@@ -11,7 +11,7 @@ if [ "$App_enable" = '1' ];then  #monlor-kodexplorer
 			logsh "【KodExplorer】" "kodexplorer配置文件出现问题"    #monlor-kodexplorer
 		fi    #monlor-kodexplorer
 		$monlorpath/apps/$appname/script/$appname.sh restart  #monlor-kodexplorer
-	elif [ "$result" == '0' ]; then #monlor-kodexplorer
+	elif [ "$result" -lt '5' ]; then #monlor-kodexplorer
 		logsh "【KodExplorer】" "kodexplorer运行异常，正在重启..."  #monlor-kodexplorer
 		$monlorpath/apps/$appname/script/$appname.sh restart  #monlor-kodexplorer
 	fi  #monlor-kodexplorer
