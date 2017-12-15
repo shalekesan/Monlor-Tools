@@ -28,17 +28,11 @@ curl -skLo /tmp/monlor.tar.gz https://coding.net/u/monlor/p/Monlor-Tools/git/raw
 echo "解压工具箱文件"
 tar -zxvf /tmp/monlor.tar.gz -C /tmp > /dev/null 2>&1
 [ $? -ne 0 ] && echo "文件解压失败！" && exit
-mv /tmp/monlor /etc
-chmod -R +x /etc/monlor/scripts/*
+cp -rf /tmp/monlor /etc
+chmod -R +x /etc/monlor/*
 echo "初始化工具箱..."
-if [ ! -f "/etc/config/monlor" ]; then
-	touch /etc/config/monlor
-	uci set monlor.tools=config
-	uci set monlor.tools.userdisk="$userdisk"
-	uci set monlor.tools.xunlei=0
-	uci set monlor.tools.ssh_enable=0
-	uci commit monlor
-fi
+sed -i "s#|||||#$userdisk#" /etc/monlor/config/uciset.sh
+
 if [ -f "$userdisk/.monlor.conf.bak" ]; then
 	echo -n "检测到备份的配置文件，是否要恢复？[y/n] "
 	read answer

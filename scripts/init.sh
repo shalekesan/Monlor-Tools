@@ -10,6 +10,10 @@ if [ "$result" -gt '2' ]; then
         exit
 fi
 
+if [ ! -f "/etc/config/monlor" ]; then
+	$monlorpath/config/uciset.sh
+fi
+
 result=$(cat /etc/profile | grep monlor | wc -l)
 if [ "$result" == 0 ]; then
 	sed -i "s#/usr/sbin#/usr/sbin:$monlorpath/scripts#" /etc/profile
