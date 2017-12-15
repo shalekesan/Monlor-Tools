@@ -45,3 +45,4 @@ echo "工具箱安装完成!"
 
 echo "请前往小米路由器$userdisk目录"
 echo "编辑隐藏文件.monlor.conf配置工具箱."
+rm -rf /tmp/install.sh
