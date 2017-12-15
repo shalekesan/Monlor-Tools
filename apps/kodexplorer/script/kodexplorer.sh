@@ -27,15 +27,20 @@ set_config() {
 		logsh "【$service】" "修改nginx配置文件"
 		sed -i 's/nobody/root/' $NGINXCONF
 		sed -i 's/listen       80;/listen       81;/' $NGINXCONF
-		sed -i '45s/index.html/index.php index.html/' $NGINXCONF
-		sed -i '65,71s/#//g' $NGINXCONF
+		phpstart=`cat $NGINXCONF | grep -nC 3 fastcgi_index | cut -d- -f1 | head -1`
+		phpend=`cat $NGINXCONF | grep -nC 3 fastcgi_index | cut -d- -f1 | tail -1`
+		[ ! -z "$phpstart" -a ! -z "phpend" ] && sed -i ""$phpstart","$phpend"s/#//g" $NGINXCONF
+		sed -i '/#/d' $NGINXCONF
+		sed -i 's/index.html/index.php index.html/' $NGINXCONF
 		sed -i 's#root           html#root           /opt/share/nginx/html#' $NGINXCONF
-		sed -i '65,71s/\/scripts/\$document_root/' $NGINXCONF
-		sed -i '65,71s/9000/9009/' $NGINXCONF
+		sed -i 's/\/scripts/\$document_root/' $NGINXCONF
+		sed -i 's/9000/9009/' $NGINXCONF
 		#修改php配置文件
 		logsh "【$service】" "修改php配置文件"
 		docline=`cat $PHPCONF | grep -n doc_root | cut -d: -f1 | tail -1`
-		sed -i ""$docline"s#.*#doc_root = \"/opt/share/nginx/html\"#" $PHPCONF
+		baseline=`cat $PHPCONF | grep -n open_basedir | cut -d: -f1 | head -1`
+		[ ! -z "$docline" ] && sed -i ""$docline"s#.*#doc_root = \"/opt/share/nginx/html\"#" $PHPCONF
+		[ ! -z "$baseline" ] && sed -i ""$baseline"s#.*#open_basedir = \"/opt/share/nginx/html\"#" $PHPCONF
 		sed -i 's/memory_limit = 8M/memory_limit = 20M/' $PHPCONF
 		sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 2000M/' $PHPCONF
 
@@ -71,7 +76,7 @@ start () {
 	result1=$(uci -q get monlor.entware)
 	result2=$(ls /opt | grep etc)
 	if [ -z "$result1" ] || [ -z "$result2" ]; then 
-		logsh "【$service】" "检测到【Entware】服务未启动"
+		logsh "【$service】" "检测到【Entware】服务未启动或未安装"
 		exit
 	else
 		result3=$(echo $PATH | grep opt)

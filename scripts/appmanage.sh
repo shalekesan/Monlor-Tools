@@ -117,7 +117,7 @@ del() {
 	sed -i "/script\/$appname/d" $monlorpath/scripts/dayjob.sh
 	ssline1=$(cat $monlorconf | grep -ni "【$appname】" | head -1 | cut -d: -f1)
 	ssline2=$(cat $monlorconf | grep -ni "【$appname】" | tail -1 | cut -d: -f1)
-	sed -i ""$ssline1","$ssline2"d" $monlorconf > /dev/null 2>&1
+	[ ! -z "$ssline1" -a ! -z "$ssline2" ] && sed -i ""$ssline1","$ssline2"d" $monlorconf > /dev/null 2>&1
 	install_line=`cat $monlorconf | grep -n install_$appname | cut -d: -f1`           
         [ ! -z "$install_line" ] && sed -i ""$install_line"s/1/0/" $monlorconf 
         logsh "【Tools】" "插件卸载完成"

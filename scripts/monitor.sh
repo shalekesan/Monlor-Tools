@@ -40,7 +40,7 @@ if [ ! -z "$samba_path" ]; then
 		logsh "【Tools】" "检测到samba路径被修改, 正在设置..."
 		cp /etc/samba/smb.conf /tmp/smb.conf.bak
 		sambaline=$(grep -A 1 -n "XiaoMi" /etc/samba/smb.conf | tail -1 | cut -d- -f1)
-		sed -i ""$sambaline"s#.*#        path = $samba_path#" /etc/samba/smb.conf
+		[ ! -z "$sambaline" ] && sed -i ""$sambaline"s#.*#        path = $samba_path#" /etc/samba/smb.conf
 		[ $? -ne 0 ] && mv /tmp/smb.conf.bak /etc/samba/smb.conf || rm -rf /tmp/smb.conf.bak
 	fi
 fi
