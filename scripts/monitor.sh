@@ -7,8 +7,10 @@ source /etc/monlor/scripts/base.sh
 result=$(ps | grep {monitor.sh} | grep -v grep | wc -l)
 [ "$result" -gt '2' ] && logsh "【Tools】" "检测到monitor.sh已在运行" && exit
 
+logsh "【Tools】" "运行工具箱配置文件，检查配置更新"
 $userdisk/.monlor.conf
 uci commit monlor
+logsh "【Tools】" "检查软件安装配置"
 uci show monlor | grep install_ | awk -F "_|=" '{print$2}' | while read line
 do
 	install=$(uci get monlor.tools.install_$line)    #0表示不安装，1表示安装
@@ -22,17 +24,20 @@ do
 		$monlorpath/scripts/appmanage.sh del $line
 	fi
 done
+logsh "【Tools】" "检查工具箱卸载配置"
 result=$(uci -q get monlor.tools.uninstall)
 if [ "$result" == '1' ]; then
 	$monlorpath/scripts/uninstall.sh
 	exit
 fi
+logsh "【Tools】" "检查工具箱更新配置"
 result=$(uci -q get monlor.tools.update)
 if [ "$result" == '1' ]; then
 	$monlorpath/scripts/update.sh
 	[ $? -ne 0 ] && logsh "【Tools】" "更新失败！" && exit
 fi
 #检查samba共享目录
+logsh "【Tools】" "检查samba共享目录配置"
 samba_path=$(uci -q get monlor.tools.samba_path)
 if [ ! -z "$samba_path" ]; then
 	result=$(cat /etc/samba/smb.conf | grep -A 5 XiaoMi | grep -w $samba_path | awk '{print$3}')

@@ -6,6 +6,7 @@ wgetfilepath="$1"
 wgetfilename=$(basename $1)
 wgeturl="$2"
 
+logsh "【Tools】" "下载程序中..."
 curl -skLo /tmp/md5.txt $monlorurl/md5.txt
 curl -skLo "$wgetfilepath" "$wgeturl"
 if [ $? -eq 0 ]; then
@@ -13,7 +14,7 @@ if [ $? -eq 0 ]; then
 else
 	result1=1
 fi
-
+logsh "【Tools】" "校验MD5文件信息"
 local_md5=$(md5sum "$wgetfilepath" | cut -d' ' -f1)
 origin_md5=$(cat /tmp/md5.txt | grep "$wgetfilename" | cut -d' ' -f4)
 [ ${#origin_md5} -lt 32 ] && origin_md5=$(cat /tmp/md5.txt | grep "$wgetfilename" | cut -d' ' -f1)
