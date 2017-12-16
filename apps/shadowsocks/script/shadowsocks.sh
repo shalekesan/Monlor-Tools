@@ -256,6 +256,7 @@ start() {
     	[ "$ss_mode" == "gfwlist" ] || [ "$ss_mode" == "wholemode" ] || [ "$ss_mode" == "whitelist" ] && iptables -t nat -I PREROUTING $iptablenu -p tcp -j SHADOWSOCKS
 	
 	/etc/init.d/dnsmasq restart
+	logsh "【$service】" "启动$appname服务完成！"
 
 }
 

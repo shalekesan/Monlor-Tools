@@ -80,9 +80,10 @@ start () {
 	iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
 	service_start $BIN 
 	if [ $? -ne 0 ]; then
-                logsh "【$service】" "启动$appname服务失败！"
+        logsh "【$service】" "启动$appname服务失败！"
 		exit
-        fi
+    fi
+    logsh "【$service】" "启动$appname服务完成！"
 
 }
 

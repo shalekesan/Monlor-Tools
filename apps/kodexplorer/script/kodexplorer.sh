@@ -100,9 +100,9 @@ start () {
 	if [ $? -ne 0 ]; then
                 logsh "【$service】" "启动php服务失败！"
 		exit
-        fi
-        logsh "【$service】" "$appname服务启动完成"
-        logsh "【$service】" "请在浏览器中访问[http://192.168.31.1:81]来配置"
+    fi
+    logsh "【$service】" "$appname服务启动完成"
+    logsh "【$service】" "请在浏览器中访问[http://192.168.31.1:81]来配置"
 
 }
 

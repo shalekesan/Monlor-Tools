@@ -64,12 +64,11 @@ start () {
 	# iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
 	/opt/etc/init.d/rc.unslung start
 	if [ $? -ne 0 ]; then
-                logsh "【$service】" "启动$appname服务失败！"
+        logsh "【$service】" "启动$appname服务失败！"
 		exit
-        else
-        	logsh "【$service】" "启动成功，请运行source /etc/profile使配置生效!"
-        fi
-        
+    else
+        logsh "【$service】" "启动成功，请运行source /etc/profile使配置生效!"
+    fi
 
 }
 

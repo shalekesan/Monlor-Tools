@@ -11,7 +11,9 @@ appname=fastdick
 BIN=$monlorpath/apps/$appname/bin/$appname
 CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
+
 set_config() {
+
     logsh "【$service】" "检查$appname配置"
     uid=$(uci -q get monlor.$appname.uid)
     pwd=$(uci -q get monlor.$appname.pwd)
@@ -27,8 +29,11 @@ set_config() {
     sed -i ""$uidline"s#.*#uid=$uid#" $BIN
     sed -i ""$pwdline"s#.*#pwd=$pwd#" $BIN
     sed -i ""$peerline"s#.*#peerid=$peerid#" $BIN
+
 }
+
 start () {
+    
     result=$(ps | grep $BIN | grep -v grep | wc -l)
    	if [ "$result" != '0' ];then
         logsh "【$service】" "$appname已经在运行！"
@@ -40,18 +45,26 @@ start () {
     iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
     service_start $BIN
     if [ $? -ne 0 ]; then
-                logsh "【$service】" "启动$appname服务失败！"
+        logsh "【$service】" "启动$appname服务失败！"
         exit
-        fi
+    fi
+    logsh "【$service】" "启动$appname服务完成！"
+
 }
+
 stop () {
+
     logsh "【$service】" "正在停止$appname服务... "
     service_stop $BIN
     ps | grep $BIN | grep -v grep | awk '{print$1}' | xargs kill -9 > /dev/null 2>&1
     iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
+
 }
+
 restart () {
+
     stop
     sleep 1
     start
+
 }

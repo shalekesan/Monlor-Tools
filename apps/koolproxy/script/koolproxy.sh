@@ -204,6 +204,7 @@ start () {
     add_white_black_ip
     load_nat
     dns_takeover
+    logsh "【$service】" "启动$appname服务完成！"
 }
 
 stop () {
