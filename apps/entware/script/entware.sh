@@ -22,7 +22,7 @@ install() {
 		logsh "【$service】" "未配置安装路径！" 
 		exit
 	fi
-	[ ! -f $BIN ] && mount $path /opt
+	[ ! -f $BIN ] && mount -o blind $path /opt
 	result=$(cat /etc/profile | grep "/opt/sbin" | wc -l)
 	[ "$result" == '0' ] && sed -i "s/PATH=/PATH=\/opt\/bin:\/opt\/sbin:/" /etc/profile
 	result=$(cat /etc/profile | grep "LD_LIBRARY_PATH" | wc -l)
