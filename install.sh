@@ -38,6 +38,7 @@ if [ -f "$userdisk/.monlor.conf.bak" ]; then
 	read answer
 	[ "$answer" == 'y' ] && mv $userdisk/.monlor.conf.bak $userdisk/.monlor.conf
 fi
+kill -9 $(ps | grep monlor | grep -v grep | awk '{print$1}') > /dev/null 2>&1
 /etc/monlor/scripts/init.sh
 rm -rf /tmp/monlor.tar.gz
 rm -rf /tmp/monlor
