@@ -1,6 +1,6 @@
 appname=tinyproxy #monlor-tinyproxy
 App_enable=$(uci get monlor.$appname.enable)  #monlor-tinyproxy
-result=$(ps | grep tinyproxy | grep -v grep | wc -l)  #monlor-tinyproxy
+result=$(ps | grep $monlorpath | grep tinyproxy | grep -v grep | wc -l)  #monlor-tinyproxy
 if [ "$App_enable" = '1' ];then  #monlor-tinyproxy
 	if [ `uci get monlor.$appname.restart` -eq 1 ]; then  #monlor-tinyproxy
 		logsh "【TinyProxy】" "tinyproxy配置已修改，正在重启tinyproxy服务..."  #monlor-tinyproxy

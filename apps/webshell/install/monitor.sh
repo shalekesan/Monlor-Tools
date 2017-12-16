@@ -1,6 +1,6 @@
 appname=webshell #monlor-webshell
 App_enable=$(uci get monlor.$appname.enable)  #monlor-webshell
-result=$(ps | grep webshell | grep -v grep | wc -l)  #monlor-webshell
+result=$(ps | grep $monlorpath | grep webshell | grep -v grep | wc -l)  #monlor-webshell
 if [ "$App_enable" = '1' ];then  #monlor-webshell
 	if [ `uci get monlor.$appname.restart` -eq 1 ]; then  #monlor-webshell
 		logsh "【WebShell】" "webshell配置已修改，正在重启webshell服务..."  #monlor-webshell

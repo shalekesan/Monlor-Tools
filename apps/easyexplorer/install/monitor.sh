@@ -1,6 +1,6 @@
 appname=easyexplorer #monlor-easyexplorer
 App_enable=$(uci get monlor.$appname.enable)  #monlor-easyexplorer
-result=$(ps | grep easyexplorer | grep -v grep | wc -l)  #monlor-easyexplorer
+result=$(ps | grep $monlorpath | grep easyexplorer | grep -v grep | wc -l)  #monlor-easyexplorer
 if [ "$App_enable" = '1' ];then  #monlor-easyexplorer
 	if [ `uci get monlor.$appname.restart` -eq 1 ]; then  #monlor-easyexplorer
 		logsh "【EasyExplorer】" "easyexplorer配置已修改，正在重启easyexplorer服务..."  #monlor-easyexplorer

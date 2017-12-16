@@ -1,6 +1,6 @@
 appname=vsftpd #monlor-vsftpd
 App_enable=$(uci get monlor.$appname.enable)  #monlor-vsftpd
-result=$(ps | grep vsftpd | grep -v grep | wc -l)  #monlor-vsftpd
+result=$(ps | grep $monlorpath | grep vsftpd | grep -v grep | wc -l)  #monlor-vsftpd
 if [ "$App_enable" = '1' ];then  #monlor-vsftpd
 	if [ `uci get monlor.$appname.restart` -eq 1 ]; then  #monlor-vsftpd
 		logsh "【VsFtpd】" "vsftpd配置已修改，正在重启vsftpd服务..."  #monlor-vsftpd

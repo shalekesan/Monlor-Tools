@@ -1,6 +1,6 @@
 appname=aria2 #monlor-aria2
 App_enable=$(uci get monlor.$appname.enable)  #monlor-aria2
-result=$(ps | grep aria2 | grep -v grep | wc -l)  #monlor-aria2
+result=$(ps | grep $monlorpath | grep aria2 | grep -v grep | wc -l)  #monlor-aria2
 if [ "$App_enable" = '1' ];then  #monlor-aria2
 	if [ `uci get monlor.$appname.restart` -eq 1 ]; then  #monlor-aria2
 		logsh "【Aria2】" "aria2配置已修改，正在重启aria2服务..."  #monlor-aria2

@@ -1,6 +1,6 @@
 appname=shadowsocks #monlor-shadowsocks
 App_enable=$(uci get monlor.$appname.enable)  #monlor-shadowsocks
-result1=$(ps | grep -E 'ss-redir|ssr-redir' | grep -v grep | wc -l)  #monlor-shadowsocks
+result1=$(ps | grep $monlorpath | grep -E 'ss-redir|ssr-redir' | grep -v grep | wc -l)  #monlor-shadowsocks
 result2=$(iptables -L -t nat  | grep SHADOWSOCKS | wc -l)  #monlor-shadowsocks
 if [ "$App_enable" = '1' ];then  #monlor-shadowsocks
 	if [ `uci get monlor.$appname.restart` -eq 1 ]; then  #monlor-shadowsocks

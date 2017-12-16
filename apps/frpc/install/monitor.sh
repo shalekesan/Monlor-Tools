@@ -1,6 +1,6 @@
 appname=frpc #monlor-frpc
 App_enable=$(uci get monlor.$appname.enable)  #monlor-frpc
-result=$(ps | grep frpc | grep -v grep | wc -l)  #monlor-frpc
+result=$(ps | grep $monlorpath | grep frpc | grep -v grep | wc -l)  #monlor-frpc
 if [ "$App_enable" = '1' ];then  #monlor-frpc
 	if [ `uci get monlor.$appname.restart` -eq 1 ]; then  #monlor-frpc
 		logsh "【Frpc】" "frpc配置已修改，正在重启frpc服务..."  #monlor-frpc

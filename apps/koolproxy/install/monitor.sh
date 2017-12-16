@@ -1,6 +1,6 @@
 appname=koolproxy #monlor-koolproxy
 App_enable=$(uci get monlor.$appname.enable)  #monlor-koolproxy
-result1=$(ps | grep koolproxy | grep -v grep | wc -l)  #monlor-koolproxy
+result1=$(ps | grep $monlorpath | grep koolproxy | grep -v grep | wc -l)  #monlor-koolproxy
 result2=$(iptables -L -t nat  | grep KOOLPROXY | wc -l)  #monlor-koolproxy
 if [ "$App_enable" = '1' ];then  #monlor-koolproxy
 	if [ `uci get monlor.$appname.restart` -eq 1 ]; then  #monlor-koolproxy

@@ -1,6 +1,6 @@
 appname=kms #monlor-kms
 App_enable=$(uci get monlor.$appname.enable)  #monlor-kms
-result=$(ps | grep kms | grep -v grep | wc -l)  #monlor-kms
+result=$(ps | grep $monlorpath | grep kms | grep -v grep | wc -l)  #monlor-kms
 if [ "$App_enable" = '1' ];then  #monlor-kms
 	if [ `uci get monlor.$appname.restart` -eq 1 ]; then  #monlor-kms
 		logsh "【Kms】" "kms配置已修改，正在重启kms服务..."  #monlor-kms
