@@ -102,6 +102,7 @@ start () {
 		exit
         fi
         logsh "【$service】" "$appname服务启动完成"
+        logsh "【$service】" "请在浏览器中访问[http://192.168.31.1:81]来配置"
 
 }
 
@@ -110,6 +111,7 @@ stop () {
 	logsh "【$service】" "正在停止$appname服务... "
 	/opt/etc/init.d/S80nginx stop >> /tmp/messages 2>&1
 	killall php-cgi >> /tmp/messages 2>&1
+	kill -9 $(ps | grep -E 'nginx|php-cgi' | grep -v sysa | grep -v grep | awk '{print$1}') > /dev/null 2>&1
 	umount $WWW/data/User/admin/home > /dev/null 2>&1
 	iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
 

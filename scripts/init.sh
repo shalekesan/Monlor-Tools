@@ -44,7 +44,7 @@ if [ ! -f "$monlorconf" ]; then
 	chmod +x $monlorconf
 fi
 
-logsh "【Tools】" "运行monitor监控脚本"
+logsh "【Tools】" "运行monitor.sh监控脚本"
 $monlorpath/scripts/monitor.sh
 
 logsh "【Tools】" "检查迅雷配置"
