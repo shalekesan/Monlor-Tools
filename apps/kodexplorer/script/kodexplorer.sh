@@ -51,10 +51,10 @@ set_config() {
 	fi
 	if [ ! -d $WWW/app/kod/ ]; then
 		logsh "【$service】" "未检测到$appname文件，正在下载"
-		curl -sLo /tmp/kodexplorer.zip $monlorurl/temp/kodexplorer.zip
+		curl -skLo $WWW/kodexplorer.tar.gz $monlorurl/temp/kodexplorer.tar.gz
 		[ $? -ne 0 ] && logsh "【$service】" "$appname文件下载失败" && exit
-		unzip /tmp/kodexplorer.zip -d $WWW
-		rm -rf /tmp/kodexplorer.zip
+		tar zxvf $WWW/kodexplorer.tar.gz -C $WWW
+		rm -rf $WWW/kodexplorer.tar.gz
 	fi
 	path=$(uci get monlor.$appname.path)
 	logsh "【$service】" "挂载$appname管理目录"
