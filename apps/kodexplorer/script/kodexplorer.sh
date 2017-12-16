@@ -32,22 +32,22 @@ set_config() {
 		[ ! -z "$phpstart" -a ! -z "phpend" ] && sed -i ""$phpstart","$phpend"s/#//g" $NGINXCONF
 		sed -i '/#/d' $NGINXCONF
 		sed -i 's/index.html/index.php index.html/' $NGINXCONF
-		sed -i 's#root           html#root           /opt/share/nginx/html#' $NGINXCONF
+		sed -i "s#root           html#root           $WWW#" $NGINXCONF
 		sed -i 's/\/scripts/\$document_root/' $NGINXCONF
 		sed -i 's/9000/9009/' $NGINXCONF
 		#修改php配置文件
 		logsh "【$service】" "修改php配置文件"
 		docline=`cat $PHPCONF | grep -n doc_root | cut -d: -f1 | tail -1`
 		baseline=`cat $PHPCONF | grep -n open_basedir | cut -d: -f1 | head -1`
-		[ ! -z "$docline" ] && sed -i ""$docline"s#.*#doc_root = \"/opt/share/nginx/html\"#" $PHPCONF
-		[ ! -z "$baseline" ] && sed -i ""$baseline"s#.*#open_basedir = \"/opt/share/nginx/html\"#" $PHPCONF
+		[ ! -z "$docline" ] && sed -i ""$docline"s#.*#doc_root = \"$WWW\"#" $PHPCONF
+		[ ! -z "$baseline" ] && sed -i ""$baseline"s#.*#open_basedir = \"$WWW\"#" $PHPCONF
 		sed -i 's/memory_limit = 8M/memory_limit = 20M/' $PHPCONF
 		sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 2000M/' $PHPCONF
 
 		echo "<?php phpinfo(); ?>" > $WWW/info.php
 		rm -rf $WWW/index.html
 	fi
-	if [ ! -d /opt/share/nginx/html/app/kod/ ]; then
+	if [ ! -d $WWW/app/kod/ ]; then
 		logsh "【$service】" "未检测到$appname文件，正在下载"
 		curl -sLo /tmp/kodexplorer.zip $monlorurl/temp/kodexplorer.zip
 		[ $? -ne 0 ] && logsh "【$service】" "$appname文件下载失败" && exit

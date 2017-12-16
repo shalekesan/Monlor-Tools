@@ -62,7 +62,7 @@ start () {
 	install
 	
 	# iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
-	/opt/etc/init.d/rc.unslung start
+	/opt/etc/init.d/rc.unslung start >> /tmp/messages 2>&1
 	if [ $? -ne 0 ]; then
         logsh "【$service】" "启动$appname服务失败！"
 		exit
