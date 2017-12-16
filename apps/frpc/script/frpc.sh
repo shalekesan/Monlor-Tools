@@ -16,6 +16,7 @@ LOG=/var/log/$appname.log
 
 set_config() {
 
+	logsh "【$service】" "生成$appname配置文件"
 	result1=$(uci show monlor.$appname | grep server | wc -l)
 	result2=$(ls $monlorpath/apps/$appname/config | grep frplist | wc -l)
 	if [ "$result1" == '0' -o "$result2" == '0' ]; then
@@ -39,20 +40,24 @@ set_config() {
 	do
 		[ -z "$line" ] || [ ${line:0:1} == "#" ] && continue
 		echo >> $CONF
-		echo "[`cutsh $line 1`]" >> $CONF
+		name=`cutsh $line 1`
+		echo "[$name]" >> $CONF
 		type=`cutsh $line 2`
 		echo "type = $type" >> $CONF
 		echo "local_ip = `cutsh $line 3`" >> $CONF
 		echo "local_port = `cutsh $line 4`" >> $CONF
 		if [ "$type" == "tcp" -o "$type" == "udp" ]; then
 			echo "remote_port = `cutsh $line 5`" >> $CONF
+			logsh "【$service】" "加载$appname配置:【$name】启动为tcp/udp模式,端口号:[`cutsh $line 5`]"
 		fi
 		if [ "$type" == "http" -o "$type" == "https" ]; then
 			domain=`cutsh $line 6`
 			if [ `echo $domain | grep "\." | wc -l` -eq 0 ]; then
 				echo "subdomain = $domain" >> $CONF
+				logsh "【$service】" "加载$appname配置:【$name】启动为http/https子域名模式,域名:[$domain]"
 			else
 				echo "custom_domain = $domain" >> $CONF
+				logsh "【$service】" "加载$appname配置:【$name】启动为http/https自定义域名模式,域名:[$domain]"
 			fi
 		fi
 		echo "use_encryption = true" >> $CONF

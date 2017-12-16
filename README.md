@@ -83,4 +83,5 @@
 	2017-12-16
 		1.添加了KoolProxy最新vip规则
 		2.优化KodExplorer安装脚本
+		3.更新Frpc 1.1版本，增加配置添加提示
 

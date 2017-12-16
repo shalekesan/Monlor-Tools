@@ -70,14 +70,15 @@ upgrade() {
 	
 	[ `checkuci $appname` -ne 0 ] && logsh "【Tools】" "【$appname】插件未安装！" && exit
 	#检查更新
+	rm -rf /tmp/version.txt
 	curl -skLo /tmp/version.txt $monlorurl/apps/$appname/config/version.txt 
 	[ $? -ne 0 ] && logsh "【Tools】" "检查更新失败！" && exit
 	newver=$(cat /tmp/version.txt)
 	oldver=$(cat $monlorpath/apps/$appname/config/version.txt) > /dev/null 2>&1
 	[ $? -ne 0 ] && logsh "【Tools】" "$appname文件出现问题，请卸载后重新安装" && exit
-	logsh "【Tools】" "当前版本$oldver,最新版本$newver"
+	logsh "【Tools】" "当前版本$oldver，最新版本$newver"
 	[ "$newver" == "$oldver" ] && logsh "【Tools】" "【$appname】已经是最新版！" && exit
-	logsh "【Tools】" "正在更新$appname插件... "
+	logsh "【Tools】" "版本不一致，正在更新$appname插件... "
 	#检查服务状态
 	result=$(uci -q get monlor.$appname.enable)
         if [ "$result" == '1' ]; then
@@ -95,10 +96,10 @@ upgrade() {
 	uci commit monlor
 	logsh "【Tools】" "插件更新完成"
 	result=$(uci -q get monlor.$appname.enable)
-        if [ "$result" == '1' ]; then
-        	logsh "【Tools】" "正在启动【$appname】服务"
-        	$monlorpath/apps/$appname/script/$appname.sh start
-        fi
+    if [ "$result" == '1' ]; then
+    	logsh "【Tools】" "正在启动【$appname】服务"
+    	$monlorpath/apps/$appname/script/$appname.sh start
+    fi
 }
 
 del() {
