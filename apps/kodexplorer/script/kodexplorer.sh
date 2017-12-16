@@ -25,6 +25,7 @@ set_config() {
 		opkg install php7-cgi php7-mod-curl php7-mod-gd php7-mod-iconv php7-mod-json php7-mod-mbstring php7-mod-opcache php7-mod-session php7-mod-zip nginx spawn-fcgi zoneinfo-core zoneinfo-asia
 		#修改nginx配置文件
 		logsh "【$service】" "修改nginx配置文件"
+		cp $NGINXCONF $NGINXCONF.bak
 		sed -i 's/nobody/root/' $NGINXCONF
 		sed -i 's/listen       80;/listen       81;/' $NGINXCONF
 		phpstart=`cat $NGINXCONF | grep -nC 3 fastcgi_index | cut -d- -f1 | head -1`
@@ -37,6 +38,7 @@ set_config() {
 		sed -i 's/9000/9009/' $NGINXCONF
 		#修改php配置文件
 		logsh "【$service】" "修改php配置文件"
+		cp $PHPCONF $PHPCONF.bak
 		docline=`cat $PHPCONF | grep -n doc_root | cut -d: -f1 | tail -1`
 		baseline=`cat $PHPCONF | grep -n open_basedir | cut -d: -f1 | head -1`
 		[ ! -z "$docline" ] && sed -i ""$docline"s#.*#doc_root = \"$WWW\"#" $PHPCONF
@@ -55,6 +57,7 @@ set_config() {
 		rm -rf /tmp/kodexplorer.zip
 	fi
 	path=$(uci get monlor.$appname.path)
+	logsh "【$service】" "挂载$appname管理目录"
 	if [ ! -z "$path" ]; then
 		if [ -d $WWW/data/User/admin/home ]; then
 			mount -o blind $path $WWW/data/User/admin/home

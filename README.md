@@ -81,7 +81,8 @@
 		1. 增加EasyKodexplorer插件，一款跨设备、点对点文件传输同步工具，详情：http://koolshare.cn/thread-129199-1-1.html
 
 	2017-12-16
-		1.添加了KoolProxy最新vip规则
-		2.优化KodExplorer安装脚本
-		3.更新Frpc 1.1版本，增加配置添加提示
+		1. 添加了KoolProxy最新vip规则
+		2. 优化KodExplorer安装脚本
+		3. 更新Frpc 1.1版本，增加配置添加提示
+		4. 优化了所有脚本的提示
 
