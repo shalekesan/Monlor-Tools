@@ -35,7 +35,7 @@ get_config() {
     
 	logsh "【$service】" "创建ss节点配置文件..."
 	local_ip=0.0.0.0
-	idinfo=`cat $SER_CONF | grep $id`
+	idinfo=`cat $SER_CONF | grep $id | head -1`
 	ss_name=`cutsh $idinfo 1`
 	ss_server=`cutsh $idinfo 2`
 	ss_server_port=`cutsh $idinfo 3`
@@ -55,7 +55,7 @@ get_config() {
 	cp $CONFIG $DNSCONF && sed -i 's/1081/1082/g' $DNSCONF
 	
 	if [ `uci get monlor.$appname.ssgena` == 1 ]; then
-		idinfo=`cat $SER_CONF | grep $ssgid`
+		idinfo=`cat $SER_CONF | grep $ssgid | head -1`
 	    	ssg_name=`cutsh $idinfo 1`
 	    	ssg_server=`cutsh $idinfo 2`
 	    	ssg_server_port=`cutsh $idinfo 3`
