@@ -15,6 +15,13 @@ if [ ! -f "/etc/config/monlor" ]; then
 	$monlorpath/config/uciset.sh
 fi
 
+logsh "【Tools】" "检查工具箱配置文件"
+if [ ! -f "$monlorconf" ]; then
+	cp $monlorpath/config/monlor.conf $monlorconf
+	chmod +x $monlorconf
+	sleep 1
+fi
+
 logsh "【Tools】" "检查环境变量配置"
 result=$(cat /etc/profile | grep monlor | wc -l)
 if [ "$result" == 0 ]; then
@@ -36,12 +43,6 @@ logsh "【Tools】" "检查工具箱开机启动配置"
 result=$(cat /etc/firewall.user | grep init.sh | wc -l) > /dev/null 2>&1
 if [ "$result" == '0' ]; then
 	echo "$monlorpath/scripts/init.sh" > /etc/firewall.user
-fi
-
-logsh "【Tools】" "检查工具箱配置文件"
-if [ ! -f "$monlorconf" ]; then
-	cp $monlorpath/config/monlor.conf $monlorconf
-	chmod +x $monlorconf
 fi
 
 logsh "【Tools】" "运行monitor.sh监控脚本"
