@@ -34,7 +34,7 @@ echo "初始化工具箱..."
 sed -i "s#|||||#$userdisk#" /etc/monlor/config/uciset.sh
 
 if [ -f "$userdisk/.monlor.conf.bak" ]; then
-	echo -n "检测到备份的配置文件，是否要恢复？[y/n] "
+	echo -n "检测到备份的配置，是否要恢复？[y/n] "
 	read answer
 	[ "$answer" == 'y' ] && mv $userdisk/.monlor.conf.bak $userdisk/.monlor.conf
 fi
