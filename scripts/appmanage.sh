@@ -53,7 +53,7 @@ add() {
 	fi
 	#初始化uci配置
 	uci set monlor.$appname=config
-	$monlorpath/apps/$appname/install/monlor.conf
+	$monlorconf
 	
 	echo " [ \`uci get monlor.$appname.enable\` -eq 1 ] && $monlorpath/apps/$appname/script/$appname.sh restart" >> $monlorpath/scripts/dayjob.sh
 	install_line=`cat $monlorconf | grep -n install_$appname | cut -d: -f1`
