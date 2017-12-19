@@ -60,7 +60,8 @@ monitor() {
 			sed -i "`expr $restartline + 1`s/.*/\$uciset\.restart=\"0\"/" $monlorconf 
 		else   
 			logsh "【$service】" "$appname配置文件出现问题"
-		fi   
+		fi 
+		return  
 	fi
 	#检查插件运行异常情况
 	result=$($monlorpath/apps/$appname/script/$appname.sh status) 
