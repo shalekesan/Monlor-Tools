@@ -9,11 +9,14 @@ SERVICE_DAEMONIZE=1
 
 service=Entware
 appname=entware
+EXTRA_COMMANDS=" status  version"
+EXTRA_HELP="        status  Get $appname status
+        version Get $appname version"
 # port=
 BIN=/opt/etc/init.d/rc.unslung
 # CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
-path=$(uci get monlor.$appname.path) > /dev/null 2>&1
+path=$(uci -q get monlor.$appname.path) 
 
 install() {
 
@@ -75,10 +78,12 @@ start () {
 stop () {
 
 	logsh "【$service】" "正在停止$appname服务... "
-	/opt/etc/init.d/rc.unslung stop > /dev/null 2>&1
+	/opt/etc/init.d/rc.unslung stop >> /tmp/messages 2>&1
 	[ -f $BIN ] && umount -lf /opt
-	sed -i "/LD_LIBRARY_PATH/d" /etc/profile
-	sed -i "s/\/opt\/bin:\/opt\/sbin://" /etc/profile
+	result=$(cat /etc/profile | grep -c LD_LIBRARY_PATH)
+	[ "$result" != '0' ] && sed -i "/LD_LIBRARY_PATH/d" /etc/profile
+	result=$(cat /etc/profile | grep -c /opt/sbin)
+	[ "$result" != '0' ] && sed -i "s/\/opt\/bin:\/opt\/sbin://" /etc/profile
 	# ps | grep $BIN | grep -v grep | awk '{print$1}' | xargs kill -9 > /dev/null 2>&1
 	# iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
 	logsh "【$service】" "停止成功，请运行source /etc/profile使配置生效!"
@@ -94,3 +99,20 @@ restart () {
 
 }
 
+status() {
+
+	result1=$(cat /etc/profile | grep -c LD_LIBRARY_PATH)
+	result2=$(cat /etc/profile | grep -c /opt/sbin)
+	if [ ! -f $BIN ] || [ -z $path ] || [ "$result1" == '0' ] || [ "$result2" == '0' ]; then
+		echo -e "0\c"
+	else
+		echo -e "1\c"
+	fi
+
+}
+
+version() {
+
+	echo $(cat $monlorpath/apps/$appname/config/version.txt)
+
+}

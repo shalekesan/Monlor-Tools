@@ -16,6 +16,9 @@ lanip=$(uci get network.lan.ipaddr)
 redip=$lanip
 service=ShadowSocks
 appname=shadowsocks
+EXTRA_COMMANDS=" status  version"
+EXTRA_HELP="        status  Get $appname status
+        version Get $appname version"
 SER_CONF=$monlorpath/apps/$appname/config/ssserver.conf
 CONFIG=$monlorpath/apps/$appname/config/ss.conf
 DNSCONF=$monlorpath/apps/$appname/config/dns2socks.conf
@@ -386,3 +389,20 @@ restart()
 
 }
 
+status() {
+
+	result=$(ps | grep $monlorpath | grep -E 'ss-redir|ssr-redir' | grep -v grep | wc -l)
+	http_status=`curl  -s -w %{http_code} https://www.google.com.hk/images/branding/googlelogo/1x/googlelogo_color_116x41dp.png -k -o /dev/null --socks5 127.0.0.1:1082`
+	if [ "$result" == '0' ] || [ "$http_status" != "200" ]; then
+		echo -e "0\c"
+	else
+		echo -e "1\c"
+	fi
+
+}
+
+version() {
+
+	echo $(cat $monlorpath/apps/$appname/config/version.txt)
+
+}

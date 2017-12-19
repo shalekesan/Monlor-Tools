@@ -9,6 +9,9 @@ SERVICE_DAEMONIZE=1
 
 service=Kms
 appname=kms
+EXTRA_COMMANDS=" status  version"
+EXTRA_HELP="        status  Get $appname status
+        version Get $appname version"
 port=1688
 BIN=$monlorpath/apps/$appname/bin/$appname
 CONF=$monlorpath/apps/$appname/config/$appname.conf
@@ -24,7 +27,7 @@ set_config() {
 start () {
 
 	result=$(ps | grep $BIN | grep -v grep | wc -l)
-    if [ "$result" != '0' ];then
+    	if [ "$result" != '0' ];then
 		logsh "【$service】" "$appname已经在运行！"
 		exit 1
 	fi
@@ -59,3 +62,19 @@ restart () {
 
 }
 
+status() {
+
+	result=$(ps | grep $BIN | grep -v grep | wc -l)
+	if [ "$result" == '0' ]; then
+		echo -e "0\c"
+	else
+		echo -e "1\c"
+	fi
+
+}
+
+version() {
+
+	echo $(cat $monlorpath/apps/$appname/config/version.txt)
+
+}

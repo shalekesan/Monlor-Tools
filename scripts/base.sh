@@ -25,11 +25,11 @@ checkuci() {
 
 cutsh() {
 
-    	test1=$1
-    	test2=$2
+	test1=$1
+	test2=$2
 	[ -z "$test2" ] && test2=$test1
 	echo `echo $test1 | cut -d, -f$test2`
-    
+
 }
 
 logsh() {
@@ -38,4 +38,32 @@ logsh() {
 	
 }
 
-
+monitor() {
+	appname=$1
+	service=`uci -q get monlor.$1.service`
+	if [ -z $appname ] || [ -z $service ]; then
+		logsh "【Tools】" "uci配置出现问题！"
+	fi
+	App_enable=$(uci get monlor.$appname.enable)  
+	result=$($monlorpath/apps/$appname/script/$appname.sh status)  
+	if [ "$App_enable" = '1' ];then  
+		if [ `uci get monlor.$appname.restart` -eq 1 ]; then  
+			logsh "【$service】" $appname配置已修改，正在重启$appname服务..."  
+			restartline=$(cat $monlorconf | grep -n kodrestart | cut -d: -f1)  
+			if [ ! -z $restartline ];then    
+				sed -i "`expr $restartline + 1`s/.*/\$uciset\.restart=\"0\"/" $monlorconf  
+			else    
+				logsh "【$service】" $appname配置文件出现问题"    
+			fi    
+			$monlorpath/apps/$appname/script/$appname.sh restart  
+		elif [ "$result" == '0' ]; then 
+			logsh "【$service】" $appname运行异常，正在重启..."  
+			$monlorpath/apps/$appname/script/$appname.sh restart  
+		fi  
+	elif [ "$App_enable" = '0' ];then  
+		if [ "$result" == '1' ]; then    
+			logsh "【$service】" $appname配置已修改，正在停止$appname服务..."    
+			$monlorpath/apps/$appname/script/$appname.sh stop    
+		fi    
+	fi  
+}

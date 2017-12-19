@@ -46,15 +46,15 @@ add() {
 	fi
 	mv /tmp/$appname $monlorpath/apps
 	chmod +x -R $monlorpath/apps/$appname
-	#将插件的配置添加到工具箱
-	$monlorpath/apps/$appname/install/uciset.sh
-	#echo >> $monlorpath/scripts/monitor.sh
-	cat $monlorpath/apps/$appname/install/monitor.sh >> $monlorpath/scripts/monitor.sh 
+	#配置添加到工具箱配置文件
 	result=`cat $monlorconf | grep -i "【$appname】" | wc -l`
 	if [ "$result" == '0' ]; then
-		#echo >> $userdisk/.monlor.conf
 		cat $monlorpath/apps/$appname/install/monlor.conf >> $monlorconf
 	fi
+	#初始化uci配置
+	uci set monlor.$appname=config
+	$monlorpath/apps/$appname/install/monlor.conf
+	
 	echo " [ \`uci get monlor.$appname.enable\` -eq 1 ] && $monlorpath/apps/$appname/script/$appname.sh restart" >> $monlorpath/scripts/dayjob.sh
 	install_line=`cat $monlorconf | grep -n install_$appname | cut -d: -f1`
 	[ ! -z "$install_line" ] && sed -i ""$install_line"s/0/1/" $monlorconf
@@ -88,7 +88,6 @@ upgrade() {
 	logsh "【Tools】" "删除旧的配置文件"
 	uci del monlor.$appname > /dev/null 2>&1
 	rm -rf $monlorpath/apps/$appname
-	sed -i "/monlor-$appname/d" $monlorpath/scripts/monitor.sh
 	sed -i "/script\/$appname/d" $monlorpath/scripts/dayjob.sh
 	#安装服务
 	add $appname > /dev/null 2>&1
@@ -115,7 +114,6 @@ del() {
 	uci del monlor.$appname > /dev/null 2>&1
 	uci commit monlor
 	rm -rf $monlorpath/apps/$appname > /dev/null 2>&1
-	sed -i "/monlor-$appname/d" $monlorpath/scripts/monitor.sh
 	sed -i "/script\/$appname/d" $monlorpath/scripts/dayjob.sh
 	ssline1=$(cat $monlorconf | grep -ni "【$appname】" | head -1 | cut -d: -f1)
 	ssline2=$(cat $monlorconf | grep -ni "【$appname】" | tail -1 | cut -d: -f1)

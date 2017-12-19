@@ -7,6 +7,9 @@ SERVICE_WRITE_PID=1
 SERVICE_DAEMONIZE=1
 service=FastDick
 appname=fastdick
+EXTRA_COMMANDS=" status  version"
+EXTRA_HELP="        status  Get $appname status
+        version Get $appname version"
 # port=1688
 BIN=$monlorpath/apps/$appname/bin/$appname
 CONF=$monlorpath/apps/$appname/config/$appname.conf
@@ -66,5 +69,22 @@ restart () {
     stop
     sleep 1
     start
+
+}
+
+status() {
+
+    result=$(ps | grep $BIN | grep -v grep | wc -l)
+    if [ "$result" == '0' ]; then
+        echo -e "0\c"
+    else
+        echo -e "1\c"
+    fi
+
+}
+
+version() {
+
+    echo $(cat $monlorpath/apps/$appname/config/version.txt)
 
 }

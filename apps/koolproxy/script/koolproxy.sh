@@ -8,6 +8,9 @@ SERVICE_DAEMONIZE=1
 
 service=KoolProxy
 appname=koolproxy
+EXTRA_COMMANDS=" status  version"
+EXTRA_HELP="        status  Get $appname status
+        version Get $appname version"
 BIN=$monlorpath/apps/$appname/bin/$appname
 KPCT=$monlorpath/apps/$appname/config/kpcontrol.conf
 koolproxy_policy=`uci get monlor.$appname.mode` > /dev/null 2>&1
@@ -221,5 +224,22 @@ restart () {
     stop
     sleep 1
     start
+
+}
+
+status() {
+
+    result=$(ps | grep $BIN | grep -v grep | wc -l)
+    if [ "$result" == '0' ]; then
+        echo -e "0\c"
+    else
+        echo -e "1\c"
+    fi
+
+}
+
+version() {
+
+    echo $(cat $monlorpath/apps/$appname/config/version.txt)
 
 }

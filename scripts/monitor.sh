@@ -51,4 +51,8 @@ if [ ! -z "$samba_path" ]; then
 fi
 
 #监控运行状态
-
+logsh "【Tools】" "检查插件运行状态"
+uci show monlor | grep =config | grep -v tools | awk -F "\.|=" '{print$2}' | while read line
+do
+	monitor $line
+done

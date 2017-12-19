@@ -9,6 +9,9 @@ SERVICE_DAEMONIZE=1
 
 service=KodExplorer
 appname=kodexplorer
+EXTRA_COMMANDS=" status  version"
+EXTRA_HELP="        status  Get $appname status
+        version Get $appname version"
 port=81
 PHPBIN=/opt/bin/spawn-fcgi
 NGINXBIN=/opt/sbin/nginx
@@ -128,3 +131,19 @@ restart () {
 
 }
 
+status() {
+
+	result=$(ps | grep -E 'nginx|php-cgi' | grep -v sysa | grep -v grep | wc -l)
+	if [ "$result" -lt '5' ]; then
+		echo -e "0\c"
+	else
+		echo -e "1\c"
+	fi
+
+}
+
+version() {
+
+	echo $(cat $monlorpath/apps/$appname/config/version.txt)
+
+}
