@@ -42,7 +42,6 @@ logsh "【Tools】" "检查工具箱配置文件"
 if [ ! -f "$monlorconf" ]; then
 	cp $monlorpath/config/monlor.conf $monlorconf
 	chmod +x $monlorconf
-	sleep 2
 fi
 
 logsh "【Tools】" "运行monitor.sh监控脚本"
