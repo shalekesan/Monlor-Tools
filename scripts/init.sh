@@ -42,14 +42,14 @@ logsh "【Tools】" "检查工具箱配置文件"
 if [ ! -f "$monlorconf" ]; then
 	cp $monlorpath/config/monlor.conf $monlorconf
 	chmod +x $monlorconf
-	sleep 1
+	sleep 2
 fi
 
 logsh "【Tools】" "运行monitor.sh监控脚本"
 $monlorpath/scripts/monitor.sh
 
 logsh "【Tools】" "检查迅雷配置"
-xunlei_enable=$(uci get monlor.tools.xunlei)
+xunlei_enable=$(uci -q get monlor.tools.xunlei)
 xunlei_enabled=$(ps | grep -E 'etm|xunlei' | grep -v grep | wc -l)
 if [ "$xunlei_enable" == '1' -a "$xunlei_enabled" != '0' ]; then
 	[ -f /usr/sbin/xunlei.sh ] && mv /usr/sbin/xunlei.sh /usr/sbin/xunlei.sh.bak
@@ -64,7 +64,7 @@ else
 fi
 
 logsh "【Tools】" "检查ssh外网访问配置"
-ssh_enable=$(uci get monlor.tools.ssh_enable)
+ssh_enable=$(uci -q get monlor.tools.ssh_enable)
 ssh_enabled=$(iptables -S | grep -c "monlor-ssh")
 if [ "$ssh_enable" == '1' -a "$ssh_enabled" == '0' ]; then
 	iptables -I INPUT -p tcp --dport 22 -m comment --comment "monlor-ssh" -j ACCEPT > /dev/null 2>&1
