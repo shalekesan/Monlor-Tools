@@ -18,7 +18,7 @@ pack() {
 	cd ..
 	mv apps/*.tar.gz appstore/
 	[ `uname -s` == "Darwin" ] && md5=md5 || md5=md5sum
-	md5 appstore/* > md5.txt
+	$md5 appstore/* > md5.txt
 }
 
 localgit() {
