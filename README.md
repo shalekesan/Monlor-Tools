@@ -87,3 +87,7 @@
 		4. 优化了所有脚本的提示
 		5. 修复安装命令BUG
 
+	2017-12-19
+		1. 同步更新EasyExplorer二进制版本到0.1.3，支持Dlan了，详情https://github.com/koolshare/ddnsto
+
+
