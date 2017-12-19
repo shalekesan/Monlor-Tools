@@ -19,7 +19,7 @@ logsh "【Tools】" "检查工具箱配置文件"
 if [ ! -f "$monlorconf" ]; then
 	cp $monlorpath/config/monlor.conf $monlorconf
 	chmod +x $monlorconf
-	sleep 1
+	sleep 3
 fi
 
 logsh "【Tools】" "检查环境变量配置"
