@@ -46,25 +46,26 @@ monitor() {
 	fi
 	App_enable=$(uci -q get monlor.$appname.enable) 
 	result=$($monlorpath/apps/$appname/script/$appname.sh status) 
-	if [ "$App_enable" = '1' ];then 
-		if [ `uci get monlor.$appname.restart` -eq 1 ]; then 
-			logsh "【$service】" "$appname配置已修改，正在重启$appname服务..." 
-			restartline=$(cat $monlorconf | grep -n "$appname"restart | cut -d: -f1) 
-			if [ ! -z $restartline ];then   
-				sed -i "`expr $restartline + 1`s/.*/\$uciset\.restart=\"0\"/" $monlorconf 
-			else   
-				logsh "【$service】" "$appname配置文件出现问题"
-				exit   
-			fi   
+	restart=$(uci get monlor.$appname.restart)
+	#执行重启命令
+	if [ "$restart" == '1' ]; then 
+		logsh "【$service】" "$appname配置已修改，正在重启$appname服务..." 
+		restartline=$(cat $monlorconf | grep -n "$appname"restart | cut -d: -f1) 
+		if [ ! -z $restartline ];then   
 			$monlorpath/apps/$appname/script/$appname.sh restart 
-		elif [ "$result" == '0' ]; then
-			logsh "【$service】" "$appname运行异常，正在重启..." 
-			$monlorpath/apps/$appname/script/$appname.sh restart 
-		fi 
-	elif [ "$App_enable" = '0' ];then 
-		if [ "$result" == '1' ]; then   
-			logsh "【$service】" "$appname配置已修改，正在停止$appname服务..."   
-			$monlorpath/apps/$appname/script/$appname.sh stop   
+			sed -i "`expr $restartline + 1`s/.*/\$uciset\.restart=\"0\"/" $monlorconf 
+		else   
+			logsh "【$service】" "$appname配置文件出现问题"
 		fi   
-	fi 
+	fi
+	#检查插件运行异常情况
+	result=$($monlorpath/apps/$appname/script/$appname.sh status) 
+	if [ "$App_enable" == '1' -a "$result" == '0' ]; then
+		logsh "【$service】" "$appname运行异常，正在重启..." 
+		$monlorpath/apps/$appname/script/$appname.sh restart 
+	elif [ "$App_enable" == '0' -a "$result" == '1' ]
+		logsh "【$service】" "$appname配置已修改，正在停止$appname服务..."   
+		$monlorpath/apps/$appname/script/$appname.sh stop
+	fi
+
 }
