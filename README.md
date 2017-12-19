@@ -89,5 +89,6 @@
 
 	2017-12-19
 		1. 同步更新EasyExplorer二进制版本到0.1.3，支持Dlan了，详情https://github.com/koolshare/ddnsto
+		2. 修改了工具箱插件安装逻辑，配置文件更新，建议使用新的配置文件，或重装工具箱
 
 

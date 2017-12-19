@@ -1,10 +1,22 @@
 #!/bin/bash
 cd ~/Documents/GitHub/Monlor-Tools
 find  .  -name  '.*'  -type  f  -print  -exec  rm  -rf  {} \;
+if [ `uname -s` == "Darwin" ]; then
+	md5=md5 
+	flag="\"\""
+else 
+	md5=md5sum
+	flag=""
+fi
+
 pack() {
 	mkdir -p monlor/apps/
 	cp -rf config/ monlor/config
 	cp -rf scripts/ monlor/scripts
+	if [ "$1" == "test" ]; then
+		sed -i $flag '4s/monlorurl/#monlorurl/' monlor/scripts/base.sh
+		sed -i $flag '5s/#//' monlor/scripts/base.sh
+	fi
 	tar -zcvf monlor.tar.gz monlor/
 	#zip -r monlor.zip monlor/
 	rm -rf appstore/*
@@ -17,7 +29,6 @@ pack() {
 	done 
 	cd ..
 	mv apps/*.tar.gz appstore/
-	[ `uname -s` == "Darwin" ] && md5=md5 || md5=md5sum
 	$md5 appstore/* > md5.txt
 }
 
@@ -52,10 +63,12 @@ case $1 in
 		coding
 		;;
 	github)
+		pack
 		localgit
 		github		
 		;;
 	coding)
+		pack
 		localgit
 		coding
 		;;
@@ -68,6 +81,7 @@ case $1 in
 		pack
 		;;
 	test)
+		pack test
 		localgit
 		test
 		;;

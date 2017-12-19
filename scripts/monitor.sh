@@ -6,6 +6,11 @@ source /etc/monlor/scripts/base.sh
 [ ! -f "$monlorconf" ] && logsh "【Tools】" "找不到配置文件，工具箱异常！" && exit
 result=$(ps | grep {monitor.sh} | grep -v grep | wc -l)
 [ "$result" -gt '2' ] && logsh "【Tools】" "检测到monitor.sh已在运行" && exit
+result=$(cat /tmp/messages | wc -l)
+if [ "$result" -gt 12000 ]; then
+	logsh "【Tools】" "检测到系统日志占用内存过多，正在清除..."
+	echo > /tmp/messages
+fi
 
 logsh "【Tools】" "运行工具箱配置文件，检查配置更新"
 $userdisk/.monlor.conf
@@ -20,14 +25,18 @@ do
 		$monlorpath/scripts/appmanage.sh add $line
 	fi
 	if [ "$install"  == '0' ] && [ "$installed" == '0' ]; then
-		logsh "【Tools】" "$line配置文件已修改，正在卸载$line服务..."
-		$monlorpath/scripts/appmanage.sh del $line
+		md5_1=$(md5sum $monlorconf)
+		md5_2=$(md5sum $monlorpath/config/monlor.conf)
+		if [ "$md5_1" != "$md5_2" ]; then
+			logsh "【Tools】" "$line配置文件已修改，正在卸载$line服务..."
+			$monlorpath/scripts/appmanage.sh del $line
+		fi
 	fi
 done
 logsh "【Tools】" "检查工具箱卸载配置"
 result=$(uci -q get monlor.tools.uninstall)
 if [ "$result" == '1' ]; then
-	$monlorpath/scripts/uninstall.sh
+	sleep 60 && $monlorpath/scripts/uninstall.sh &
 	exit
 fi
 logsh "【Tools】" "检查工具箱更新配置"
