@@ -54,8 +54,14 @@ add() {
 	#初始化uci配置
 	uci set monlor.$appname=config
 	$monlorconf
-	
 	echo " [ \`uci get monlor.$appname.enable\` -eq 1 ] && $monlorpath/apps/$appname/script/$appname.sh restart" >> $monlorpath/scripts/dayjob.sh
+	#检查配置文件中的install
+	result=$(cat $monlorconf | grep install_$appname | wc -l)
+	if [ "$result" == '0' ]; then
+		addline=$(cat $monlorconf | grep -n "【Tools】" | tail -1 | cut -d: -f1)
+		[ ! -z $addline ] && sed -i ""$addline"i\\\$uciset.install_$appname=\"1\"" $monlorconf
+	fi
+	#修改配置文件install配置
 	install_line=`cat $monlorconf | grep -n install_$appname | cut -d: -f1`
 	[ ! -z "$install_line" ] && sed -i ""$install_line"s/0/1/" $monlorconf
 	#清除临时文件
