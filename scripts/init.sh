@@ -41,11 +41,11 @@ fi
 logsh "【Tools】" "检查工具箱配置文件"
 if [ ! -f "$monlorconf" ]; then
 	cp $monlorpath/config/monlor.conf $monlorconf
-	[ $? -eq 0 ] && chmod +x $monlorconf
+	chmod +x $monlorconf
 fi
 
-# logsh "【Tools】" "运行monitor.sh监控脚本"
-[ $? -eq 0 ] && $monlorpath/scripts/monitor.sh
+logsh "【Tools】" "运行monitor.sh监控脚本"
+$monlorpath/scripts/monitor.sh
 
 logsh "【Tools】" "检查迅雷配置"
 xunlei_enable=$(uci -q get monlor.tools.xunlei)

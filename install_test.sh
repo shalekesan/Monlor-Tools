@@ -36,7 +36,11 @@ sed -i "s#|||||#$userdisk#" /etc/monlor/config/uciset.sh
 if [ -f "$userdisk/.monlor.conf.bak" ]; then
 	echo -n "检测到备份的配置，是否要恢复？[y/n] "
 	read answer
-	[ "$answer" == 'y' ] && mv $userdisk/.monlor.conf.bak $userdisk/.monlor.conf
+	if [ "$answer" == 'y' ]; then
+		mv $userdisk/.monlor.conf.bak $userdisk/.monlor.conf
+	else
+		[ ! -f $userdisk/.monlor.conf ] && cp /etc/monlor/config/monlor.conf $userdisk/.monlor.conf
+	fi
 fi
 kill -9 $(ps | grep monlor | grep -v grep | awk '{print$1}') > /dev/null 2>&1
 /etc/monlor/scripts/init.sh
