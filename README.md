@@ -17,7 +17,7 @@
 	才疏学浅，但有一颗学习和折腾的心！
 		
 ## 安装方式：  
-#### 	手动安装插件
+#### 	手动安装
 	1. 下载install.sh文件到路由器的/tmp目录
 	2. 执行chmod +x /tmp/install.sh && /tmp/install.sh安装
 	3. 执行source /etc/profile 使环境变量生效

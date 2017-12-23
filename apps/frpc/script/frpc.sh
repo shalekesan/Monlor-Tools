@@ -86,6 +86,7 @@ start () {
                 logsh "【$service】" "启动$appname服务失败！"
 		exit
         fi
+        logsh "【$service】" "启动$appname服务完成！"
 
 }
 

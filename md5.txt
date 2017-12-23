@@ -1,13 +1,13 @@
-711c7db6b4e1f67b11ce72431feff934  appstore/aria2.tar.gz
-7cba17260d652bbe3257426bdf3501b7  appstore/easyexplorer.tar.gz
-4e65af1a83d6d576618c88e3ea868b80  appstore/entware.tar.gz
-e23bc8f6fd044457ac60c92d431957cb  appstore/fastdick.tar.gz
-2bff1a9e4c6a494ed8adf4a5ce9f63f9  appstore/frpc.tar.gz
-deaba1797d51711e83f64bb0b016bf2e  appstore/kms.tar.gz
-84cbe4a57730efc27b71bd03e8530325  appstore/kodexplorer.tar.gz
-aa8722a0c47ad9dd847fe31f1590c6ea  appstore/koolproxy.tar.gz
-fb38c6c6fc3c3709f37db7dd5a53fa80  appstore/monlor.tar.gz
-09e01608bf40ccb94d768516c4c0db95  appstore/shadowsocks.tar.gz
-431c98cde17a1848b9f231edd6681a11  appstore/tinyproxy.tar.gz
-f57ac5e8ae2f506959dcac1a680d6bd9  appstore/vsftpd.tar.gz
-b50d83f5def099ba4f06502f7a9b78b5  appstore/webshell.tar.gz
+MD5 (appstore/aria2.tar.gz) = 364f5e401da4ef92bb5c95ba53282008
+MD5 (appstore/easyexplorer.tar.gz) = cc7f24f18e6bcb2efacf03529f183830
+MD5 (appstore/entware.tar.gz) = d7b3fd16d0af0bedfb0a1b638e797167
+MD5 (appstore/fastdick.tar.gz) = 0a84b8123890d7818ba54996b617818a
+MD5 (appstore/frpc.tar.gz) = c26df8304156a753e529d5ca39231ab8
+MD5 (appstore/kms.tar.gz) = 11e5cd6955298ac226e6b40a05e161ab
+MD5 (appstore/kodexplorer.tar.gz) = 71d9f207789099a5c306ce9d1f5ecf0f
+MD5 (appstore/koolproxy.tar.gz) = 14d7257d75d02ac153cf172b58126ef4
+MD5 (appstore/monlor.tar.gz) = 803ae234e8d3ecadf7377d6214c6b471
+MD5 (appstore/shadowsocks.tar.gz) = 95ee1d843d61c52cce9c2c8d545bce74
+MD5 (appstore/tinyproxy.tar.gz) = 5d8a7d6bf7ed16aa6360fae60ce43b68
+MD5 (appstore/vsftpd.tar.gz) = 5c05de039bb21494959fb1d22b08324f
+MD5 (appstore/webshell.tar.gz) = 0e212274e7a16db3225bd9a33b143aac

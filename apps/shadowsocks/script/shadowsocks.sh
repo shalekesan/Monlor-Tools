@@ -392,8 +392,9 @@ restart()
 status() {
 
 	result=$(ps | grep $monlorpath | grep -E 'ss-redir|ssr-redir' | grep -v grep | wc -l)
-	http_status=`curl  -s -w %{http_code} https://www.google.com.hk/images/branding/googlelogo/1x/googlelogo_color_116x41dp.png -k -o /dev/null --socks5 127.0.0.1:1082`
-	if [ "$result" == '0' ] || [ "$http_status" != "200" ]; then
+	#http_status=`curl  -s -w %{http_code} https://www.google.com.hk/images/branding/googlelogo/1x/googlelogo_color_116x41dp.png -k -o /dev/null --socks5 127.0.0.1:1082`
+	#if [ "$result" == '0' ] || [ "$http_status" != "200" ]; then
+	if [ "$result" == '0' ]; then
 		echo -e "0\c"
 	else
 		echo -e "1\c"

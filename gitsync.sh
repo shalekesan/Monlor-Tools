@@ -8,8 +8,8 @@ else
 	md5=md5sum
 	flag=""
 fi
-#test version
-#curl -skLo /tmp/install.sh https://coding.net/u/monlor/p/Monlor-Test/git/raw/master/install_test.sh && chmod +x /tmp/install.sh && /tmp/install.sh && source /etc/profile
+# test version
+# curl -skLo /tmp/install.sh https://coding.net/u/monlor/p/Monlor-Test/git/raw/master/install_test.sh && chmod +x /tmp/install.sh && /tmp/install.sh && source /etc/profile
 
 pack() {
 	mkdir -p monlor/apps/
