@@ -20,10 +20,8 @@ logsh "【Tools】" "解压工具箱文件"
 tar -zxvf /tmp/monlor.tar.gz -C /tmp > /dev/null 2>&1
 [ $? -ne 0 ] && logsh "【Tools】" "文件解压失败！" && exit
 logsh "【Tools】" "更新工具箱脚本文件"
-ls /tmp/monlor/scripts | grep -v dayjob | while read line
-do
-	cp /tmp/monlor/scripts/$line $monlorpath/scripts
-done
+rm -rf /tmp/monlor/scripts/dayjob.sh
+cp /tmp/monlor/scripts/* $monlorpath/scripts
 logsh "【Tools】" "更新工具箱配置文件"
 cp /tmp/monlor/config/* $monlorpath/config
 logsh "【Tools】" "赋予可执行权限"
