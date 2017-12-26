@@ -27,12 +27,7 @@ cp /tmp/monlor/config/* $monlorpath/config
 logsh "【Tools】" "赋予可执行权限"
 chmod -R +x $monlorpath/scripts/*
 chmod -R +x $monlorpath/config/*
-#更新monlor.conf配置文件
-if [ -f $monlorconf ]; then
-	logsh "【Tools】" "新的配置文件将保存在$monlorconf.new"
-	cp $monlorpath/config/monlor.conf $monlorconf.new
-	chmod +x $monlorconf
-fi
+
 #删除临时文件
 rm -rf /tmp/monlor.tar.gz
 rm -rf /tmp/monlor

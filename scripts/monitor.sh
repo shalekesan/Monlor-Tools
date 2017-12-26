@@ -3,7 +3,7 @@
 logger -p 1 -t "【Tools】" "监测脚本monitor.sh启动..."
 source /etc/monlor/scripts/base.sh
 
-[ ! -f "$monlorconf" ] && logsh "【Tools】" "找不到配置文件，工具箱异常！" && exit
+# [ ! -f "$monlorconf" ] && logsh "【Tools】" "找不到配置文件，工具箱异常！" && exit
 result=$(ps | grep {monitor.sh} | grep -v grep | wc -l)
 [ "$result" -gt '2' ] && logsh "【Tools】" "检测到monitor.sh已在运行" && exit
 # result=$(cat /tmp/messages | wc -l)
@@ -13,8 +13,8 @@ result=$(ps | grep {monitor.sh} | grep -v grep | wc -l)
 # fi
 
 logger -s -t "【Tools】" "运行工具箱配置文件，检查配置更新"
-$userdisk/.monlor.conf
-uci commit monlor
+# $userdisk/.monlor.conf
+# uci commit monlor
 logger -s -t "【Tools】" "检查软件安装配置"
 uci show monlor | grep install_ | awk -F "_|=" '{print$2}' | while read line
 do

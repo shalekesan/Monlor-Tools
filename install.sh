@@ -8,13 +8,13 @@ model=$(cat /proc/xiaoqiang/model)
 if [ "$model" == "R1D" -o "$model" == "R2D" -o "$model" == "R3D"  ]; then
 	userdisk="/userdisk/data"
 elif [ "$model" == "R3" -o "$model" == "R3P" -o "$model" == "R3G" ]; then
-	if [ $(df|grep -Ec '\/extdisks\/sd[a-z][0-9]?') -eq 0 ]; then
-		echo -n "没有检测到外置储存，是否将配置文件将放在/etc目录?[y/n] "
-		read answer
-		[ "$answer" == 'y' ] && userdisk=/etc || exit
-	else
-		userdisk=$(df|awk '/\/extdisks\/sd[a-z][0-9]?/{print $6;exit}')
-	fi
+	# if [ $(df|grep -Ec '\/extdisks\/sd[a-z][0-9]?') -eq 0 ]; then
+	# 	echo -n "没有检测到外置储存，是否将配置文件将放在/etc目录?[y/n] "
+	# 	read answer
+	# 	[ "$answer" == 'y' ] && userdisk=/etc || exit
+	# else
+	userdisk=$(df|awk '/\/extdisks\/sd[a-z][0-9]?/{print $6;exit}')
+	# fi
 else
 	echo "不支持你的路由器！"
 	exit
@@ -33,21 +33,20 @@ chmod -R +x /etc/monlor/*
 echo "初始化工具箱..."
 sed -i "s#|||||#$userdisk#" /etc/monlor/config/uciset.sh
 
-if [ -f "$userdisk/.monlor.conf.bak" ]; then
-	echo -n "检测到备份的配置，是否要恢复？[y/n] "
-	read answer
-	if [ "$answer" == 'y' ]; then
-		mv $userdisk/.monlor.conf.bak $userdisk/.monlor.conf
-	else
-		[ ! -f $userdisk/.monlor.conf ] && cp /etc/monlor/config/monlor.conf $userdisk/.monlor.conf
-	fi
-fi
+# if [ -f "$userdisk/.monlor.conf.bak" ]; then
+# 	echo -n "检测到备份的配置，是否要恢复？[y/n] "
+# 	read answer
+# 	if [ "$answer" == 'y' ]; then
+# 		mv $userdisk/.monlor.conf.bak $userdisk/.monlor.conf
+# 	else
+# 		[ ! -f $userdisk/.monlor.conf ] && cp /etc/monlor/config/monlor.conf $userdisk/.monlor.conf
+# 	fi
+# fi
 kill -9 $(ps | grep monlor | grep -v grep | awk '{print$1}') > /dev/null 2>&1
 /etc/monlor/scripts/init.sh
 rm -rf /tmp/monlor.tar.gz
 rm -rf /tmp/monlor
 echo "工具箱安装完成!"
 
-echo "请前往小米路由器$userdisk目录"
-echo "编辑隐藏文件.monlor.conf配置工具箱."
+echo "运行monlor命令即可配置工具箱"
 rm -rf /tmp/install.sh

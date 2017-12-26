@@ -1,0 +1,55 @@
+#!/bin/ash
+#copyright by monlor
+source /etc/monlor/scripts/base.sh
+param=$1
+
+menu() {
+
+	if [ ! -z $param ]; then
+		$param
+	else
+		i=0;
+		echo "***************************"
+		echo "**** Monlor Tools工具箱 ****"
+		echo "***************************"
+		echo "`check_version`"
+		echo 0. exit
+		cat $monlorpath/config/applist.txt | while read line
+		do
+			let i=$i+1
+			applist[$i]=$line
+			echo "$i. $line`check_install $line`"
+		done
+		read -p "请输入你的选择：" select
+		if [ "$select" == '0' ]; then
+			exit
+		elif [ "$select" -gt '0' ] && [ "$select" -le '$i' ]; then
+			applist[$select]
+		else 
+			echo "输入有误！"
+			exit
+		fi
+	fi
+
+}
+
+check_install() {
+
+	if [ `checkuci $1` == '0' ]; then
+		status=$($monlorpath/apps/$1/script/$1 status | head -1)
+		echo -n "[已安装][$status]"
+	else 
+		echo -n "[未安装][选择以安装]"
+	fi
+}
+
+check_version() {
+
+	newver=$(cat /tmp/tools_version.txt) > /dev/null 2>&1
+	oldver=$(cat $monlorpath/config/version.txt)
+	echo -n "当前版本：$oldver 最新版本：$newver"
+
+}
+
+menu
+

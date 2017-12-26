@@ -39,9 +39,9 @@ if [ "$result" != '0' ]; then
 	sed -i "/init.sh/d" /etc/firewall.user
 fi
 
-if [ -f "$monlorconf" ]; then
-	mv $monlorconf $userdisk/.monlor.conf.bak
-fi
+# if [ -f "$monlorconf" ]; then
+# 	mv $monlorconf $userdisk/.monlor.conf.bak
+# fi
 
 xunlei_enable=$(uci get monlor.tools.xunlei)
 if [ "$xunlei_enable" == '1' ]; then

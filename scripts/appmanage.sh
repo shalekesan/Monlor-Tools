@@ -44,31 +44,24 @@ add() {
 		logsh "【Tools】" "不支持你的路由器！"
 		exit
 	fi
-	mv /tmp/$appname $monlorpath/apps
-	chmod +x -R $monlorpath/apps/$appname
+	
+	
 	#配置添加到工具箱配置文件
 	result=`cat $monlorconf | grep -i "【$appname】" | wc -l`
 	if [ "$result" == '0' ]; then
-		cat $monlorpath/apps/$appname/install/monlor.conf >> $monlorconf
+		cat /tmp/$appname/install/monlor.conf >> $monlorconf
 	fi
-	#初始化uci配置
-	uci set monlor.$appname=config
-	$monlorconf
+	#初始化uci配置	
 	echo " [ \`uci get monlor.$appname.enable\` -eq 1 ] && $monlorpath/apps/$appname/script/$appname.sh restart" >> $monlorpath/scripts/dayjob.sh
-	#检查配置文件中的install
-	result=$(cat $monlorconf | grep install_$appname | wc -l)
-	if [ "$result" == '0' ]; then
-		addline=$(cat $monlorconf | grep -n "【Tools】" | tail -1 | cut -d: -f1)
-		[ ! -z $addline ] && sed -i ""$addline"i\\\$uciset.install_$appname=\"1\"" $monlorconf
-	fi
-	#修改配置文件install配置
-	install_line=`cat $monlorconf | grep -n install_$appname | cut -d: -f1`
-	[ ! -z "$install_line" ] && sed -i ""$install_line"s/0/1/" $monlorconf
+	#安装插件
+	rm -rf /tmp/$appname/install
+	chmod +x -R /tmp/$appname/$appname
+	cp -rf /tmp/$appname $monlorpath/apps
 	#清除临时文件
-	rm -rf $monlorpath/apps/$appname/install/
-	# rm -rf /tmp/$appname
+	rm -rf /tmp/$appname
 	rm -rf /tmp/$appname.tar.gz
 	logsh "【Tools】" "插件安装完成"
+	$monlorconf $appname
 
 }
 
@@ -92,19 +85,19 @@ upgrade() {
         	$monlorpath/apps/$appname/script/$appname.sh stop
         fi
 	logsh "【Tools】" "删除旧的配置文件"
-	uci del monlor.$appname > /dev/null 2>&1
-	rm -rf $monlorpath/apps/$appname
+	uci -q del monlor.$appname 
+	rm -rf $monlorpath/apps/$appname/bin/*
+	rm -rf $monlorpath/apps/$appname/config/*
+	rm -rf $monlorpath/apps/$appname/script/*
 	sed -i "/script\/$appname/d" $monlorpath/scripts/dayjob.sh
 	#安装服务
-	add $appname > /dev/null 2>&1
-	$monlorconf
-	uci commit monlor
+	add $appname
 	logsh "【Tools】" "插件更新完成"
 	result=$(uci -q get monlor.$appname.enable)
-    if [ "$result" == '1' ]; then
-    	logsh "【Tools】" "正在启动【$appname】服务"
-    	$monlorpath/apps/$appname/script/$appname.sh start
-    fi
+	if [ "$result" == '1' ]; then
+		logsh "【Tools】" "正在启动【$appname】服务"
+		$monlorpath/apps/$appname/script/$appname.sh start
+	fi
 }
 
 del() {
@@ -117,15 +110,15 @@ del() {
 	$monlorpath/apps/$appname/script/$appname.sh stop > /dev/null 2>&1
 	#删除插件的配置
 	logsh "【Tools】" "正在卸载【$appname】插件..."
-	uci del monlor.$appname > /dev/null 2>&1
+	uci -q del monlor.$appname
 	uci commit monlor
 	rm -rf $monlorpath/apps/$appname > /dev/null 2>&1
 	sed -i "/script\/$appname/d" $monlorpath/scripts/dayjob.sh
 	ssline1=$(cat $monlorconf | grep -ni "【$appname】" | head -1 | cut -d: -f1)
 	ssline2=$(cat $monlorconf | grep -ni "【$appname】" | tail -1 | cut -d: -f1)
 	[ ! -z "$ssline1" -a ! -z "$ssline2" ] && sed -i ""$ssline1","$ssline2"d" $monlorconf > /dev/null 2>&1
-	install_line=`cat $monlorconf | grep -n install_$appname | cut -d: -f1`           
-        [ ! -z "$install_line" ] && sed -i ""$install_line"s/1/0/" $monlorconf 
+	# install_line=`cat $monlorconf | grep -n install_$appname | cut -d: -f1`           
+ 	# [ ! -z "$install_line" ] && sed -i ""$install_line"s/1/0/" $monlorconf 
         logsh "【Tools】" "插件卸载完成"
 
 }

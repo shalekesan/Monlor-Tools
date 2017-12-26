@@ -6,7 +6,7 @@ monlorurl="https://coding.net/u/monlor/p/Monlor-Tools/git/raw/master"
 #monlorurl="https://raw.githubusercontent.com/monlor/Monlor-Tools/master"
 monlorpath="/etc/monlor"
 userdisk=$(uci -q get monlor.tools.userdisk)
-monlorconf="$userdisk/.monlor.conf"
+monlorconf="$monlorpath/scripts/monlor"
 
 result=$(cat /proc/xiaoqiang/model)
 if [ "$result" == "R1D" -o "$result" == "R2D" -o "$result" == "R3D"  ]; then
@@ -45,7 +45,7 @@ monitor() {
 		logsh "【Tools】" "uci配置出现问题！"
 	fi
 	App_enable=$(uci -q get monlor.$appname.enable) 
-	result=$($monlorpath/apps/$appname/script/$appname.sh status) 
+	result=$($monlorpath/apps/$appname/script/$appname.sh status | tail -1) 
 	restart=$(uci get monlor.$appname.restart)
 	#执行重启命令
 	if [ "$restart" == '1' ]; then 
@@ -64,7 +64,7 @@ monitor() {
 		return  
 	fi
 	#检查插件运行异常情况
-	result=$($monlorpath/apps/$appname/script/$appname.sh status) 
+	result=$($monlorpath/apps/$appname/script/$appname.sh status | tail -1) 
 	if [ "$App_enable" == '1' -a "$result" == '0' ]; then
 		logsh "【$service】" "$appname运行异常，正在重启..." 
 		$monlorpath/apps/$appname/script/$appname.sh restart 
