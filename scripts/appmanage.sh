@@ -82,7 +82,17 @@ upgrade() {
 	logsh "【Tools】" "当前版本$oldver，最新版本$newver"
 	[ "$newver" == "$oldver" ] && logsh "【Tools】" "【$appname】已经是最新版！" && exit
 	logsh "【Tools】" "版本不一致，正在更新$appname插件... "
-	del $appname
+	#卸载插件
+	$monlorpath/apps/$appname/script/$appname.sh stop > /dev/null 2>&1
+	#删除插件的配置
+	logsh "【Tools】" "正在卸载【$appname】插件..."
+	uci -q del monlor.$appname
+	uci commit monlor
+	# rm -rf $monlorpath/apps/$appname > /dev/null 2>&1
+	sed -i "/script\/$appname/d" $monlorpath/scripts/dayjob.sh
+	ssline1=$(cat $monlorconf | grep -ni "【$appname】" | head -1 | cut -d: -f1)
+	ssline2=$(cat $monlorconf | grep -ni "【$appname】" | tail -1 | cut -d: -f1)
+	[ ! -z "$ssline1" -a ! -z "$ssline2" ] && sed -i ""$ssline1","$ssline2"d" $monlorconf > /dev/null 2>&1
 	#安装服务
 	add $appname
 	logsh "【Tools】" "插件更新完成"

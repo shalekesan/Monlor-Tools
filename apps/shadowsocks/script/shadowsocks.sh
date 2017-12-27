@@ -35,6 +35,7 @@ id=`uci -q get monlor.$appname.id`
 ssgid=`uci -q get monlor.$appname.ssgid`
 ss_mode=$(uci -q get monlor.$appname.ss_mode)
 ssg_mode=$(uci -q get monlor.$appname.ssg_mode)
+ssg_enable=$(uci -q get monlor.$appname.ssgena)
 
 get_config() {
     
@@ -59,7 +60,7 @@ get_config() {
 	echo -e '{\n  "server":"'$ss_server'",\n  "server_port":'$ss_server_port',\n  "local_port":'1081',\n  "local_address":"'$local_ip'",\n  "password":"'$ss_password'",\n  "timeout":600,\n  "method":"'$ss_method'",\n  "protocol":"'$ssr_protocol'",\n  "obfs":"'$ssr_obfs'"\n}' > $CONFIG
 	cp $CONFIG $DNSCONF && sed -i 's/1081/1082/g' $DNSCONF
 	
-	if [ `uci -q get monlor.$appname.ssgena` == 1 ]; then
+	if [ "$ssg_enable" == 1 ]; then
 		idinfo=`cat $SER_CONF | grep $ssgid | head -1`
 	    	ssg_name=`cutsh $idinfo 1`
 	    	ssg_server=`cutsh $idinfo 2`
@@ -142,7 +143,7 @@ load_nat() {
     iptables -t nat -A SHADOWSOCKS -d $lanip/24 -j RETURN
     iptables -t nat -A SHADOWSOCKS -d $wanip/16 -j RETURN
     iptables -t nat -A SHADOWSOCKS -d $ss_server -j RETURN
-    [ `uci -q get monlor.$appname.ssgena` == 1 ] && iptables -t nat -A SHADOWSOCKS -d $ssg_server -j RETURN 
+    [ "$ssg_enable" == 1 ] && iptables -t nat -A SHADOWSOCKS -d $ssg_server -j RETURN 
 
     iptables -t nat -N SHADOWSOCK
 
@@ -225,7 +226,7 @@ start() {
 		logsh "【$service】" "未启动ss进程！"
 	esac
 
-	if [ `uci -q get monlor.$appname.ssgena` == 1 ]; then             
+	if [ "$ssg_enable" == 1 ]; then             
 		logsh "【$service】" "启动ss游戏进程($ssgid)..."
 		case $ssg_mode in
 		"cngame")
@@ -299,7 +300,7 @@ ss_addudp() {
     iptables -t mangle -A SHADOWSOCKS -d $lanip/16 -j RETURN
     iptables -t mangle -A SHADOWSOCKS -d $wanip/16 -j RETURN
     iptables -t mangle -A SHADOWSOCKS -d $ss_server -j RETURN
-    [ `uci get monlor.$appname.ssgena` == 1 ] && iptables -t mangle -A SHADOWSOCKS -d $ssg_server -j RETURN
+    [ "$ssg_enable" == 1 ] && iptables -t mangle -A SHADOWSOCKS -d $ssg_server -j RETURN
 	iptables -t mangle -A PREROUTING -p udp -j SHADOWSOCKS
 
 	chmod -x /opt/filetunnel/stunserver > /dev/null 2>&1
@@ -395,7 +396,7 @@ status() {
 	result=$(ps | grep $monlorpath | grep -E 'ss-redir|ssr-redir' | grep -v grep | wc -l)
 	#http_status=`curl  -s -w %{http_code} https://www.google.com.hk/images/branding/googlelogo/1x/googlelogo_color_116x41dp.png -k -o /dev/null --socks5 127.0.0.1:1082`
 	#if [ "$result" == '0' ] || [ "$http_status" != "200" ]; then
-	if [ `uci get monlor.$appname.ssgena` == 1 ]; then
+	if [ "$ssg_enable" == 1 ]; then
 		ssgflag=", ss游戏节点: $ssgid($ssg_mode)"
 	fi
 	if [ "$result" == '0' ]; then
