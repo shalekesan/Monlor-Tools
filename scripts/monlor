@@ -10,6 +10,7 @@ manage() {
 	echo "********************************"
 	echo "  **** Monlor Tools工具箱 ****"
 	echo "********************************"
+	echo
 	echo "0. 返回主菜单"
 	echo "1. 更新工具箱"
 	echo "2. 卸载工具箱"
@@ -47,6 +48,7 @@ menu() {
 	echo "  **** Monlor Tools工具箱 ****"
 	echo "********************************"
 	echo "`check_version`"
+	echo 
 	echo 0. 工具箱/插件管理(Ctrl + c退出)
 	cat $Applist | while read line
 	do
@@ -58,7 +60,13 @@ menu() {
 		if [ "$select" == '0' ]; then
 			manage
 		elif [ "$select" -gt '0' ] && [ "$select" -le "$(cat $Applist | wc -l)" ]; then
-			$(cat $Applist | grep -n . | grep -w $select | cut -d: -f2)
+			appname=$(cat $Applist | grep -n . | grep -w $select | cut -d: -f2)
+			if [ `checkuci $appname` == '0' ]; then
+				$appname
+			else
+				read -p "确定要安装$appname插件？[1/0]" install
+				[ "$install" = '1' ] && appmanage.sh add $appname || menu
+			fi
 		else 
 			echo "输入有误！"
 			exit
