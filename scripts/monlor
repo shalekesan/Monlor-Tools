@@ -51,6 +51,10 @@ manage() {
 			uci set monlor.tools.samba_path="$samba_path"
 		
 		;;
+		*)	
+			echo "输入有误！"
+			manage
+		;;
 	esac
 			
 
