@@ -53,18 +53,24 @@ menu() {
 	cat $Applist | while read line
 	do
 		let i=$i+1
-		echo "$i. $line`check_install $line`"
+		echo "$i. $line`check_install $line``check_update $line`"
 	done
 	read -p "请输入你的选择：" select
+	echo
 	if [ `echo $select | grep -c '^[0-9][0-9]*$'` -eq 1 ]; then
 		if [ "$select" == '0' ]; then
 			manage
 		elif [ "$select" -gt '0' ] && [ "$select" -le "$(cat $Applist | wc -l)" ]; then
 			appname=$(cat $Applist | grep -n . | grep -w $select | cut -d: -f2)
 			if [ `checkuci $appname` == '0' ]; then
-				$appname
+				if [ ! -z `check_update $appname` ]; then
+					read -p "是否要更新$appname插件？[1/0] " update
+					[ "$update" == '1' ] && appmanage.sh upgrade $appname || $appname
+				else
+					$appname
+				fi
 			else
-				read -p "确定要安装$appname插件？[1/0]" install
+				read -p "确定要安装$appname插件？[1/0] " install
 				[ "$install" = '1' ] && appmanage.sh add $appname || menu
 			fi
 		else 
@@ -86,6 +92,14 @@ check_install() {
 	else 
 		echo -n "[选择以安装]"
 	fi
+}
+
+check_update() {
+
+	newver=$(cat /tmp/version/$1.txt)
+	oldver=$(cat $monlorpath/apps/$1/config/version.txt)
+	[ "$newver" != "$oldver" ] && echo -n "[有更新]"
+
 }
 
 check_version() {
