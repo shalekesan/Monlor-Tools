@@ -31,8 +31,10 @@ APPPATH=$monlorpath/apps/$appname/bin/ss-redir
 SSGBIN=$monlorpath/apps/$appname/bin/ssg-redir
 LOCALPATH=$monlorpath/apps/$appname/bin/ss-local
 DNSPATH=$monlorpath/apps/$appname/bin/dns2socks
-id=`uci get monlor.$appname.id` > /dev/null 2>&1
-ssgid=`uci get monlor.$appname.ssgid` > /dev/null 2>&1
+id=`uci -q get monlor.$appname.id`
+ssgid=`uci -q get monlor.$appname.ssgid`
+ss_mode=$(uci -q get monlor.$appname.ss_mode)
+ssg_mode=$(uci -q get monlor.$appname.ssg_mode)
 
 get_config() {
     
@@ -145,6 +147,7 @@ load_nat() {
     iptables -t nat -N SHADOWSOCK
 
     #lan access control
+    touch $monlorpath/apps/shadowsocks/config/sscontrol.conf > /dev/null 2>&1
     cat $monlorpath/apps/$appname/config/sscontrol.conf | cut -d, -f1 | while read line
     do
     	mac=$line
@@ -155,7 +158,7 @@ load_nat() {
     done
 
     #default alc mode
-    ss_acl_default_mode=$(uci get monlor.$appname.ss_acl_default_mode)
+    ss_acl_default_mode=$(uci -q get monlor.$appname.ss_acl_default_mode)
 	[ -z "$ss_acl_default_mode" ] && ( ss_acl_default_mode=1;uci set monlor.$appname.ss_acl_default_mode=1;uci commit monlor)
 	logsh "【$service】" "加载ACL规则:其余主机模式为:$(get_mode_name $ss_acl_default_mode)"
     iptables -t nat -A SHADOWSOCKS -p tcp -j $(get_action_chain $ss_acl_default_mode)
@@ -193,25 +196,24 @@ start() {
 	load_nat
     	
 	logsh "【$service】" "启动ss主进程($id)..."
-    ss_mode=$(uci get monlor.$appname.ss_mode)
 	case $ss_mode in
-    "gfwlist")
-        	service_start $APPPATH -b 0.0.0.0 -c $CONFIG   
-        	if [ $? -ne 0 ]; then
-            	logsh "【$service】" "启动失败！"
-            	exit
-        	fi
-        	ss_gfwlist
-        	;;
-    "whitelist")
-    	service_start $APPPATH -b 0.0.0.0 -c $CONFIG
-    	if [ $? -ne 0 ]; then                                                                                                  
-                    logsh "【$service】" "启动失败！"                       
-                    exit                                
-        fi
-        ss_whitelist
-        ;;
-    "wholemode")
+	    "gfwlist")
+	        	service_start $APPPATH -b 0.0.0.0 -c $CONFIG   
+	        	if [ $? -ne 0 ]; then
+	            	logsh "【$service】" "启动失败！"
+	            	exit
+	        	fi
+	        	ss_gfwlist
+	        	;;
+	    "whitelist")
+	    	service_start $APPPATH -b 0.0.0.0 -c $CONFIG
+	    	if [ $? -ne 0 ]; then                                                                                                  
+	                    logsh "【$service】" "启动失败！"                       
+	                    exit                                
+	        fi
+	        ss_whitelist
+	        ;;
+	    "wholemode")
         	service_start $APPPATH -b 0.0.0.0 -c $CONFIG 
         	if [ $? -ne 0 ]; then
             	logsh "【$service】" "启动失败！"
@@ -223,8 +225,7 @@ start() {
 		logsh "【$service】" "未启动ss进程！"
 	esac
 
-	if [ `uci get monlor.$appname.ssgena` == 1 ]; then             
-        ssg_mode=$(uci get monlor.$appname.ssg_mode)
+	if [ `uci -q get monlor.$appname.ssgena` == 1 ]; then             
 		logsh "【$service】" "启动ss游戏进程($ssgid)..."
 		case $ssg_mode in
 		"cngame")
@@ -394,10 +395,15 @@ status() {
 	result=$(ps | grep $monlorpath | grep -E 'ss-redir|ssr-redir' | grep -v grep | wc -l)
 	#http_status=`curl  -s -w %{http_code} https://www.google.com.hk/images/branding/googlelogo/1x/googlelogo_color_116x41dp.png -k -o /dev/null --socks5 127.0.0.1:1082`
 	#if [ "$result" == '0' ] || [ "$http_status" != "200" ]; then
+	if [ `uci get monlor.$appname.ssgena` == 1 ]; then
+		ssgflag=", ss游戏节点: $ssgid($ssg_mode)"
+	fi
 	if [ "$result" == '0' ]; then
-		echo -e "0\c"
+		echo "未运行"
+		echo "0"
 	else
-		echo -e "1\c"
+		echo "ss节点: $id($ss_mode)$ssgflag" 
+		echo "1"
 	fi
 
 }
