@@ -49,7 +49,7 @@ menu() {
 	echo "********************************"
 	echo "`check_version`"
 	echo 
-	echo 0. 工具箱/插件管理(Ctrl + c退出)
+	echo "0. 工具箱/插件管理(Ctrl + c退出)"
 	cat $Applist | while read line
 	do
 		let i=$i+1
@@ -82,9 +82,9 @@ check_install() {
 
 	if [ `checkuci $1` == '0' ]; then
 		status=$($monlorpath/apps/$1/script/$1.sh status | head -1)
-		echo -n "[已安装][$status]"
+		echo -n "[$status]"
 	else 
-		echo -n "[未安装][选择以安装]"
+		echo -n "[选择以安装]"
 	fi
 }
 

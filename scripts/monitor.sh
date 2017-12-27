@@ -12,39 +12,39 @@ result=$(ps | grep {monitor.sh} | grep -v grep | wc -l)
 #	echo > /tmp/messages
 # fi
 
-logger -s -t "【Tools】" "运行工具箱配置文件，检查配置更新"
+# logger -s -t "【Tools】" "运行工具箱配置文件，检查配置更新"
 # $userdisk/.monlor.conf
 # uci commit monlor
-logger -s -t "【Tools】" "检查软件安装配置"
-uci show monlor | grep install_ | awk -F "_|=" '{print$2}' | while read line
-do
-	install=$(uci get monlor.tools.install_$line)    #0表示不安装，1表示安装
-	installed=$(checkuci $line)    #0表示uci存在，已安装
-	if [ "$install" == '1' ] && [ "$installed" == '1' ]; then
-		logsh "【Tools】" "$line配置文件已修改，正在安装$line服务..."
-		$monlorpath/scripts/appmanage.sh add $line
-	fi
-	if [ "$install"  == '0' ] && [ "$installed" == '0' ]; then
-		md5_1=$(md5sum $monlorconf)
-		md5_2=$(md5sum $monlorpath/config/monlor.conf)
-		if [ "$md5_1" != "$md5_2" ]; then
-			logsh "【Tools】" "$line配置文件已修改，正在卸载$line服务..."
-			$monlorpath/scripts/appmanage.sh del $line
-		fi
-	fi
-done
-logger -s -t "【Tools】" "检查工具箱卸载配置"
-result=$(uci -q get monlor.tools.uninstall)
-if [ "$result" == '1' ]; then
-	sleep 60 && $monlorpath/scripts/uninstall.sh &
-	exit
-fi
-logger -s -t "【Tools】" "检查工具箱更新配置"
-result=$(uci -q get monlor.tools.update)
-if [ "$result" == '1' ]; then
-	$monlorpath/scripts/update.sh
-	[ $? -ne 0 ] && logsh "【Tools】" "更新失败！" && exit
-fi
+# logger -s -t "【Tools】" "检查软件安装配置"
+# uci show monlor | grep install_ | awk -F "_|=" '{print$2}' | while read line
+# do
+# 	install=$(uci get monlor.tools.install_$line)    #0表示不安装，1表示安装
+# 	installed=$(checkuci $line)    #0表示uci存在，已安装
+# 	if [ "$install" == '1' ] && [ "$installed" == '1' ]; then
+# 		logsh "【Tools】" "$line配置文件已修改，正在安装$line服务..."
+# 		$monlorpath/scripts/appmanage.sh add $line
+# 	fi
+# 	if [ "$install"  == '0' ] && [ "$installed" == '0' ]; then
+# 		md5_1=$(md5sum $monlorconf)
+# 		md5_2=$(md5sum $monlorpath/config/monlor.conf)
+# 		if [ "$md5_1" != "$md5_2" ]; then
+# 			logsh "【Tools】" "$line配置文件已修改，正在卸载$line服务..."
+# 			$monlorpath/scripts/appmanage.sh del $line
+# 		fi
+# 	fi
+# done
+# logger -s -t "【Tools】" "检查工具箱卸载配置"
+# result=$(uci -q get monlor.tools.uninstall)
+# if [ "$result" == '1' ]; then
+# 	sleep 60 && $monlorpath/scripts/uninstall.sh &
+# 	exit
+# fi
+# logger -s -t "【Tools】" "检查工具箱更新配置"
+# result=$(uci -q get monlor.tools.update)
+# if [ "$result" == '1' ]; then
+# 	$monlorpath/scripts/update.sh
+# 	[ $? -ne 0 ] && logsh "【Tools】" "更新失败！" && exit
+# fi
 #检查samba共享目录
 logger -s -t "【Tools】" "检查samba共享目录配置"
 samba_path=$(uci -q get monlor.tools.samba_path)
