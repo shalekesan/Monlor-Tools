@@ -73,17 +73,16 @@ if [ "$xunlei_enable" == '1' -a "$xunlei_enabled" != '0' ]; then
 	killall xunlei > /dev/null 2>&1
 	killall etm > /dev/null 2>&1
 	/etc/init.d/xunlei stop &
-	rm -rf $userdisk/TDDOWNLOAD 
-	rm -rf $userdisk/ThunderDB
+	# rm -rf $userdisk/TDDOWNLOAD 
+	# rm -rf $userdisk/ThunderDB
 else
 	[ ! -f /usr/sbin/xunlei.sh ] && mv /usr/sbin/xunlei.sh.bak /usr/sbin/xunlei.sh
 	/etc/init.d/xunlei start &
 fi
 
 logsh "【Tools】" "检查ssh外网访问配置"
-ssh_enable=$(uci -q get monlor.tools.ssh_enable)
 ssh_enabled=$(iptables -S | grep -c "monlor-ssh")
-if [ "$ssh_enable" == '1' -a "$ssh_enabled" == '0' ]; then
+if [ "$ssh_enabled" == '0' ]; then
 	iptables -I INPUT -p tcp --dport 22 -m comment --comment "monlor-ssh" -j ACCEPT > /dev/null 2>&1
 fi
 

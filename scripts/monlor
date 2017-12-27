@@ -15,6 +15,8 @@ manage() {
 	echo "1. 更新工具箱"
 	echo "2. 卸载工具箱"
 	echo "3. 卸载插件"
+	echo "4. 关闭迅雷"
+	echo "5. 修改samba路径"
 	read -p "请输入你的选择：" select
 	case "$select" in
 		0)
@@ -33,6 +35,21 @@ manage() {
 			else 
 				echo "输入有误！"
 			fi
+		;;
+		4)
+			read -p "确定要关闭迅雷服务？[1/0] " xunlei
+			[ `checkread $xunlei` ] && uci set monlor.tools.xunlei="$xunlei"
+			if [ "$xunlei" == '1' ]; then
+				mv /usr/sbin/xunlei.sh /usr/sbin/xunlei.sh.bak > /dev/null 2>&1
+				killall xunlei > /dev/null 2>&1
+				killall etm > /dev/null 2>&1
+			fi
+		;;
+		5)
+			read -p "请输入新的samba路径：" samba_path
+			[ ! -d "$samba_path" -a ! -z "$samba_path" ] && mkdir -p $samba_path
+			uci set monlor.tools.samba_path="$samba_path"
+		
 		;;
 	esac
 			

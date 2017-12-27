@@ -23,6 +23,14 @@ checkuci() {
 	fi
 }
 
+checkread() {
+	if [ "$1" == '1' -o "$1" == '0' ]; then
+		echo -n '0'
+	else
+		echo -n '1'
+	fi
+}
+
 cutsh() {
 
 	test1=$1
