@@ -21,7 +21,7 @@ menu() {
 	if [ "$select" == '0' ]; then
 		exit
 	elif [ "$select" -gt '0' ] && [ "$select" -le "$(cat $Applist | wc -l)" ]; then
-		$(cat $Applist | grep -n . | grep -w 1 | cut -d: -f2)
+		$(cat $Applist | grep -n . | grep -w $select | cut -d: -f2)
 	else 
 		echo "输入有误！"
 		exit

@@ -93,6 +93,9 @@ upgrade() {
 	rm -rf $monlorpath/apps/$appname/bin/*
 	rm -rf $monlorpath/apps/$appname/config/*
 	rm -rf $monlorpath/apps/$appname/script/*
+	ssline1=$(cat $monlorconf | grep -ni "【$appname】" | head -1 | cut -d: -f1)
+	ssline2=$(cat $monlorconf | grep -ni "【$appname】" | tail -1 | cut -d: -f1)
+	[ ! -z "$ssline1" -a ! -z "$ssline2" ] && sed -i ""$ssline1","$ssline2"d" $monlorconf > /dev/null 2>&1
 	sed -i "/script\/$appname/d" $monlorpath/scripts/dayjob.sh
 	#安装服务
 	add $appname
