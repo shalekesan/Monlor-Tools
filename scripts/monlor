@@ -29,12 +29,10 @@ manage() {
 			uninstall.sh
 		;;
 		3)
-			read -p "请输入要卸载的插件名：" name
-			if [ `cat $Applist | grep -wc $name` -eq 1 ]; then
-				appmanage.sh del $name
-			else 
-				echo "输入有误！"
-			fi
+			cat $Applist | grep -n .
+			read -p "请选择要卸载的插件：" res
+			appname=$(cat $Applist | grep -n . | grep -w $res | cut -d: -f2)
+			[ ! -z "$appname" ] && appmanage.sh del $appname
 		;;
 		4)
 			read -p "确定要关闭迅雷服务？[1/0] " xunlei
