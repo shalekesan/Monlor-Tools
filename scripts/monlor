@@ -15,8 +15,12 @@ manage() {
 	echo "1. 更新工具箱"
 	echo "2. 卸载工具箱"
 	echo "3. 卸载插件"
-	echo "4. 关闭迅雷"
-	echo "5. 修改samba路径"
+	xunlei=$(uci -q get monlor.tools.xunlei)
+	[ "$xunlei" == '1' ] && xunlei="已关闭" || xunlei="未关闭"
+	echo "4. 关闭迅雷($xunlei)"
+	samba_path=$(uci -q get monlor.tools.samba_path)
+	[ ! -z "$samba_path" ] && samba_path="$samba_path" || samba_path="未修改"
+	echo "5. 修改samba路径（$samba_path）"
 	read -p "请输入你的选择：" select
 	case "$select" in
 		0)
