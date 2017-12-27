@@ -21,6 +21,7 @@ tar -zxvf /tmp/monlor.tar.gz -C /tmp > /dev/null 2>&1
 [ $? -ne 0 ] && logsh "【Tools】" "文件解压失败！" && exit
 logsh "【Tools】" "更新工具箱脚本文件"
 rm -rf /tmp/monlor/scripts/dayjob.sh
+rm -rf /tmp/monlor/scripts/monlor
 cp /tmp/monlor/scripts/* $monlorpath/scripts
 logsh "【Tools】" "更新工具箱配置文件"
 cp /tmp/monlor/config/* $monlorpath/config

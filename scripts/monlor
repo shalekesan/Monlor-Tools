@@ -2,41 +2,38 @@
 #copyright by monlor
 source /etc/monlor/scripts/base.sh
 param=$1
+Applist=$monlorpath/config/applist.txt
 
 menu() {
 
-	if [ ! -z $param ]; then
-		$param
-	else
-		i=0;
-		echo "***************************"
-		echo "**** Monlor Tools工具箱 ****"
-		echo "***************************"
-		echo "`check_version`"
-		echo 0. exit
-		cat $monlorpath/config/applist.txt | while read line
-		do
-			let i=$i+1
-			applist[$i]=$line
-			echo "$i. $line`check_install $line`"
-		done
-		read -p "请输入你的选择：" select
-		if [ "$select" == '0' ]; then
-			exit
-		elif [ "$select" -gt '0' ] && [ "$select" -le '$i' ]; then
-			applist[$select]
-		else 
-			echo "输入有误！"
-			exit
-		fi
+	i=0;
+	echo "***************************"
+	echo "**** Monlor Tools工具箱 ****"
+	echo "***************************"
+	echo "`check_version`"
+	echo 0. exit
+	cat $Applist | while read line
+	do
+		let i=$i+1
+		echo "$i. $line`check_install $line`"
+	done
+	read -p "请输入你的选择：" select
+	if [ "$select" == '0' ]; then
+		exit
+	elif [ "$select" -gt '0' ] && [ "$select" -le "$(cat $Applist | wc -l)" ]; then
+		$(cat $Applist | grep -n . | grep -w 1 | cut -d: -f2)
+	else 
+		echo "输入有误！"
+		exit
 	fi
+
 
 }
 
 check_install() {
 
 	if [ `checkuci $1` == '0' ]; then
-		status=$($monlorpath/apps/$1/script/$1 status | head -1)
+		status=$($monlorpath/apps/$1/script/$1.sh status | head -1)
 		echo -n "[已安装][$status]"
 	else 
 		echo -n "[未安装][选择以安装]"
@@ -51,5 +48,4 @@ check_version() {
 
 }
 
-menu
-
+if [ ! -z $param ]; then $param; else menu; fi #monlor-if

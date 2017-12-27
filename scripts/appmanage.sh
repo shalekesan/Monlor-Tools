@@ -49,7 +49,9 @@ add() {
 	#配置添加到工具箱配置文件
 	result=`cat $monlorconf | grep -i "【$appname】" | wc -l`
 	if [ "$result" == '0' ]; then
+		sed -i '/#monlor-if/d' $monlorconf
 		cat /tmp/$appname/install/monlor.conf >> $monlorconf
+		echo "if [ ! -z \$param ]; then \$param; else menu; fi #monlor-if" >> $monlorconf
 	fi
 	#初始化uci配置	
 	echo " [ \`uci get monlor.$appname.enable\` -eq 1 ] && $monlorpath/apps/$appname/script/$appname.sh restart" >> $monlorpath/scripts/dayjob.sh
