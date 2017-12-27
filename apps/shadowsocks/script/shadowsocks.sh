@@ -88,10 +88,10 @@ dnsconfig() {
 	killall dns2socks > /dev/null 2>&1
 	iptables -t nat -D PREROUTING -s $lanip/24 -p udp --dport 53 -j DNAT --to $redip > /dev/null 2>&1
 	logsh "【$service】" "开启dns2socks进程..."
-	[ -z "DNS_SERVER" ] && (DNS_SERVER=8.8.8.8;uci set monlor.$appname.dns_server=8.8.8.8)
-	[ -z "DNS_SERVER_PORT" ] && (DNS_SERVER_PORT=53;uci set monlor.$appname.dns_port=53)
-	DNS_SERVER=$(uci get monlor.$appname.dns_server)
-	DNS_SERVER_PORT=$(uci get monlor.$appname.dns_port)
+	DNS_SERVER=$(uci -q get monlor.$appname.dns_server)
+	DNS_SERVER_PORT=$(uci -q get monlor.$appname.dns_port)
+	[ -z "$DNS_SERVER" ] && (DNS_SERVER=8.8.8.8;uci set monlor.$appname.dns_server=8.8.8.8)
+	[ -z "$DNS_SERVER_PORT" ] && (DNS_SERVER_PORT=53;uci set monlor.$appname.dns_port=53)
 	uci commit monlor
 	service_start $DNSPATH 127.0.0.1:1082 $DNS_SERVER:$DNS_SERVER_PORT 127.0.0.1:15353 
 	if [ $? -ne 0 ];then
