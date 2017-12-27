@@ -51,13 +51,15 @@ add() {
 	if [ "$result" == '0' ]; then
 		sed -i '/#monlor-if/d' $monlorconf
 		cat /tmp/$appname/install/monlor.conf >> $monlorconf
+		echo >> $monlorconf
 		echo "if [ ! -z \$param ]; then \$param; else menu; fi #monlor-if" >> $monlorconf
 	fi
 	#初始化uci配置	
+	uci set monlor.$appname=config
 	echo " [ \`uci get monlor.$appname.enable\` -eq 1 ] && $monlorpath/apps/$appname/script/$appname.sh restart" >> $monlorpath/scripts/dayjob.sh
 	#安装插件
 	rm -rf /tmp/$appname/install
-	chmod +x -R /tmp/$appname/$appname
+	chmod +x -R /tmp/$appname/
 	cp -rf /tmp/$appname $monlorpath/apps
 	#清除临时文件
 	rm -rf /tmp/$appname
