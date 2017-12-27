@@ -59,7 +59,7 @@ get_config() {
 	echo -e '{\n  "server":"'$ss_server'",\n  "server_port":'$ss_server_port',\n  "local_port":'1081',\n  "local_address":"'$local_ip'",\n  "password":"'$ss_password'",\n  "timeout":600,\n  "method":"'$ss_method'",\n  "protocol":"'$ssr_protocol'",\n  "obfs":"'$ssr_obfs'"\n}' > $CONFIG
 	cp $CONFIG $DNSCONF && sed -i 's/1081/1082/g' $DNSCONF
 	
-	if [ `uci get monlor.$appname.ssgena` == 1 ]; then
+	if [ `uci -q get monlor.$appname.ssgena` == 1 ]; then
 		idinfo=`cat $SER_CONF | grep $ssgid | head -1`
 	    	ssg_name=`cutsh $idinfo 1`
 	    	ssg_server=`cutsh $idinfo 2`
@@ -142,7 +142,7 @@ load_nat() {
     iptables -t nat -A SHADOWSOCKS -d $lanip/24 -j RETURN
     iptables -t nat -A SHADOWSOCKS -d $wanip/16 -j RETURN
     iptables -t nat -A SHADOWSOCKS -d $ss_server -j RETURN
-    [ `uci get monlor.$appname.ssgena` == 1 ] && iptables -t nat -A SHADOWSOCKS -d $ssg_server -j RETURN 
+    [ `uci -q get monlor.$appname.ssgena` == 1 ] && iptables -t nat -A SHADOWSOCKS -d $ssg_server -j RETURN 
 
     iptables -t nat -N SHADOWSOCK
 
@@ -253,11 +253,11 @@ start() {
 	
   	iptablenu=$(iptables -t nat -L PREROUTING | awk '/KOOLPROXY/{print NR}')
 	if [ ! -z "$iptablenu" ];then
-		iptablenu=`expr $iptablenu - 2`
+		let iptablenu=$iptablenu-2
 	else
 		iptablenu=2
 	fi
-    	[ "$ss_mode" == "gfwlist" ] || [ "$ss_mode" == "wholemode" ] || [ "$ss_mode" == "whitelist" ] && iptables -t nat -I PREROUTING $iptablenu -p tcp -j SHADOWSOCKS
+    	[ "$ss_mode" == "gfwlist" ] || [ "$ss_mode" == "wholemode" ] || [ "$ss_mode" == "whitelist" ] && iptables -t nat -I PREROUTING "$iptablenu" -p tcp -j SHADOWSOCKS
 	
 	/etc/init.d/dnsmasq restart
 	logsh "【$service】" "启动$appname服务完成！"
