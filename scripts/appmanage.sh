@@ -82,29 +82,15 @@ upgrade() {
 	logsh "【Tools】" "当前版本$oldver，最新版本$newver"
 	[ "$newver" == "$oldver" ] && logsh "【Tools】" "【$appname】已经是最新版！" && exit
 	logsh "【Tools】" "版本不一致，正在更新$appname插件... "
-	#检查服务状态
-	result=$(uci -q get monlor.$appname.enable)
-        if [ "$result" == '1' ]; then
-        	logsh "【Tools】" "关闭【$appname】服务"
-        	$monlorpath/apps/$appname/script/$appname.sh stop
-        fi
-	logsh "【Tools】" "删除旧的配置文件"
-	uci -q del monlor.$appname 
-	rm -rf $monlorpath/apps/$appname/bin/*
-	rm -rf $monlorpath/apps/$appname/config/*
-	rm -rf $monlorpath/apps/$appname/script/*
-	ssline1=$(cat $monlorconf | grep -ni "【$appname】" | head -1 | cut -d: -f1)
-	ssline2=$(cat $monlorconf | grep -ni "【$appname】" | tail -1 | cut -d: -f1)
-	[ ! -z "$ssline1" -a ! -z "$ssline2" ] && sed -i ""$ssline1","$ssline2"d" $monlorconf > /dev/null 2>&1
-	sed -i "/script\/$appname/d" $monlorpath/scripts/dayjob.sh
+	del $appname
 	#安装服务
 	add $appname
 	logsh "【Tools】" "插件更新完成"
-	result=$(uci -q get monlor.$appname.enable)
-	if [ "$result" == '1' ]; then
-		logsh "【Tools】" "正在启动【$appname】服务"
-		$monlorpath/apps/$appname/script/$appname.sh start
-	fi
+	# result=$(uci -q get monlor.$appname.enable)
+	# if [ "$result" == '1' ]; then
+	# 	logsh "【Tools】" "正在启动【$appname】服务"
+	# 	$monlorpath/apps/$appname/script/$appname.sh start
+	# fi
 }
 
 del() {
