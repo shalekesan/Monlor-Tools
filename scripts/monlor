@@ -96,9 +96,11 @@ check_install() {
 
 check_update() {
 
-	newver=$(cat /tmp/version/$1.txt)
-	oldver=$(cat $monlorpath/apps/$1/config/version.txt)
-	[ "$newver" != "$oldver" ] && echo -n "[有更新]"
+	newver=$(cat /tmp/version/$1.txt) > /dev/null 2>&1
+	oldver=$(cat $monlorpath/apps/$1/config/version.txt) > /dev/null 2>&1
+	if [ ! -z "$newver" -a ! -z "$oldver" ] && [ "$newver" != "$oldver" ]; then
+		echo -n "[有更新]"
+	fi
 
 }
 
