@@ -76,6 +76,11 @@ case $1 in
 		localgit
 		coding
 		;;
+	push)
+		localgit
+		github
+		coding
+		;;
 	pack) 
 		pack
 		;;
