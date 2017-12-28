@@ -86,8 +86,8 @@ upgrade() {
 	$monlorpath/apps/$appname/script/$appname.sh stop > /dev/null 2>&1
 	#删除插件的配置
 	logsh "【Tools】" "正在卸载【$appname】插件..."
-	uci -q del monlor.$appname
-	uci commit monlor
+	# uci -q del monlor.$appname
+	# uci commit monlor
 	# rm -rf $monlorpath/apps/$appname > /dev/null 2>&1
 	sed -i "/script\/$appname/d" $monlorpath/scripts/dayjob.sh
 	ssline1=$(cat $monlorconf | grep -ni "【$appname】" | head -1 | cut -d: -f1)

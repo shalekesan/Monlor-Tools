@@ -29,7 +29,7 @@ start () {
 	cp -rf $CONF /tmp
 	sed -i "s/Port 8888/Port $port/" /tmp/$appname.conf
 	iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
-	service_start $BIN -c $appname.conf
+	service_start $BIN -c /tmp/$appname.conf
 	if [ $? -ne 0 ]; then
         logsh "【$service】" "启动$appname服务失败！"
 		exit
