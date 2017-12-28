@@ -16,17 +16,20 @@ port=8888
 BIN=$monlorpath/apps/$appname/bin/$appname
 CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
+port=$(uci -q get monlor.$appname.port) || port=8888
 
 start () {
 
 	result=$(ps | grep $BIN | grep -v grep | wc -l)
-    if [ "$result" != '0' ];then
+    	if [ "$result" != '0' ];then
 		logsh "【$service】" "$appname已经在运行！"
 		exit 1
 	fi
 	logsh "【$service】" "正在启动$appname服务... "
+	cp -rf $CONF /tmp
+	sed -i "s/Port 8888/Port $port/" /tmp/$appname.conf
 	iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
-	service_start $BIN -c $CONF  
+	service_start $BIN -c $appname.conf
 	if [ $? -ne 0 ]; then
         logsh "【$service】" "启动$appname服务失败！"
 		exit
@@ -56,9 +59,11 @@ status() {
 
 	result=$(ps | grep $BIN | grep -v grep | wc -l)
 	if [ "$result" == '0' ]; then
-		echo -e "0\c"
+		echo "未运行"
+		echo "0"
 	else
-		echo -e "1\c"
+		echo "运行端口号: $port"
+		echo "1"
 	fi
 
 }

@@ -112,9 +112,11 @@ status() {
 
 	result=$(ps | grep $BIN | grep -v grep | wc -l)
 	if [ "$result" == '0' ]; then
-		echo -e "0\c"
+		echo "未运行"
+		echo "0"
 	else
-		echo -e "1\c"
+		echo "运行中"
+		echo "1"
 	fi
 
 }

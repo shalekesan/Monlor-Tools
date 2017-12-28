@@ -13,8 +13,8 @@ EXTRA_HELP="        status  Get $appname status
         version Get $appname version"
 BIN=$monlorpath/apps/$appname/bin/$appname
 KPCT=$monlorpath/apps/$appname/config/kpcontrol.conf
-koolproxy_policy=`uci get monlor.$appname.mode` > /dev/null 2>&1
-[ "$?" -ne 0 ] && logsh "【$service】" "请修改$appname配置文件" && exit
+koolproxy_policy=`uci -q get monlor.$appname.mode` 
+[ -z $koolproxy_policy ] && logsh "【$service】" "请修改$appname配置文件" && exit
 
 start_koolproxy () {
     logsh "【$service】" "开启$appname主进程..."
@@ -231,9 +231,16 @@ status() {
 
     result=$(ps | grep $BIN | grep -v grep | wc -l)
     if [ "$result" == '0' ]; then
-        echo -e "0\c"
+        echo "未运行"
+        echo "0"
     else
-        echo -e "1\c"
+        case "$koolproxy_policy" in
+            1) flag="全局模式" ;;
+            2) flag="黑名单模式" ;;
+            3) flag="视频模式" ;;
+        esac
+        echo "运行模式: $flag"
+        echo "1"
     fi
 
 }

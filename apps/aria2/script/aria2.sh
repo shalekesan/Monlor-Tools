@@ -16,14 +16,14 @@ port=6800
 BIN=$monlorpath/apps/$appname/bin/$appname
 CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
+port=$(uci -q get monlor.$appname.port) || port=6800
+user=$(uci -q get monlor.$appname.user)
+passwd=$(uci -q get monlor.$appname.passwd)
 
 set_config() {
 
 	logsh "【$service】" "加载$appname配置..."
 	[ ! -f /etc/aria2.session ] && touch /etc/aria2.session
-	port=`uci get monlor.$appname.port` || port=6800
-	user=`uci get monlor.$appname.user` > /dev/null 2>&1 || user=
-	passwd=`uci get monlor.$appname.passwd` > /dev/null 2>&1 || passwd=
 
 	portline=`cat $CONF | grep -n rpc-listen-port | cut -d: -f1`
 	sed -i ""$portline"s/.*/rpc-listen-port=$port/" $CONF
@@ -96,9 +96,12 @@ status() {
 
 	result=$(ps | grep $BIN | grep -v grep | wc -l)
 	if [ "$result" == '0' ]; then
-		echo -e "0\c"
+		echo "未运行"
+		echo "0"
 	else
-		echo -e "1\c"
+		flag=", 用户名: $user"
+		echo "运行端口: $port$flag"
+		echo "1"
 	fi
 
 }

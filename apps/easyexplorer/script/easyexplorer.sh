@@ -16,14 +16,13 @@ port=8890
 BIN=$monlorpath/apps/$appname/bin/$appname
 CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
+path=$(uci -q get monlor.$appname.share_path) || path="$userdisk"
 
 set_config() {
 
-	path=$(uci -q get monlor.$appname.share_path)
-	[ -z "$path" ] && logsh "【$service】" "未配置$appname的共享目录"
 	[ ! -d "$path" ] && mkdir -p $path 
 	token=$(uci -q get monlor.$appname.token)
-	[ -z "$token" ] && logsh "【$service】" "未配置$appname的密钥"
+	[ -z "$token" ] && logsh "【$service】" "未配置$appname的密钥" && exit
 
 }
 
@@ -74,9 +73,11 @@ status() {
 
 	result=$(ps | grep $BIN | grep -v grep | wc -l)
 	if [ "$result" == '0' ]; then
-		echo -e "0\c"
+		echo "未运行"
+		echo "0"
 	else
-		echo -e "1\c"
+		echo "文件共享目录: $path"
+		echo "1"
 	fi
 
 }

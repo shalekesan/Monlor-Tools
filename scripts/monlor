@@ -7,9 +7,9 @@ Applist=$monlorpath/config/applist.txt
 manage() {
 
 	clear
-	echo "********************************"
-	echo "  **** Monlor Tools工具箱 ****"
-	echo "********************************"
+	echo "************************************"
+	echo "   ***** Monlor Tools工具箱 *****"
+	echo "************************************"
 	echo
 	echo "0. 返回主菜单"
 	echo "1. 更新工具箱"
@@ -21,6 +21,7 @@ manage() {
 	samba_path=$(uci -q get monlor.tools.samba_path)
 	[ ! -z "$samba_path" ] && samba_path="$samba_path" || samba_path="未修改"
 	echo "5. 修改samba路径（$samba_path）"
+	echo
 	read -p "请输入你的选择：" select
 	case "$select" in
 		0)
@@ -33,10 +34,15 @@ manage() {
 			uninstall.sh
 		;;
 		3)
+			echo "0.返回"
 			cat $Applist | grep -n .
 			read -p "请选择要卸载的插件：" res
-			appname=$(cat $Applist | grep -n . | grep -w $res | cut -d: -f2)
-			[ ! -z "$appname" ] && appmanage.sh del $appname
+			if [ "$res" == '0' ]; then
+				manage
+			else
+				appname=$(cat $Applist | grep -n . | grep -w $res | cut -d: -f2)
+				[ ! -z "$appname" ] && appmanage.sh del $appname
+			fi
 		;;
 		4)
 			read -p "确定要关闭迅雷服务？[1/0] " xunlei
@@ -78,6 +84,7 @@ menu() {
 		let i=$i+1
 		echo "$i. $line`check_install $line``check_update $line`"
 	done
+	echo
 	read -p "请输入你的选择：" select
 	echo
 	if [ `echo $select | grep -c '^[0-9][0-9]*$'` -eq 1 ]; then
@@ -103,7 +110,7 @@ menu() {
 	else
 		echo "输入有误！"
 	fi
-
+	uci commit monlor
 
 }
 

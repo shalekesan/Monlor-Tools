@@ -16,7 +16,7 @@ EXTRA_HELP="        status  Get $appname status
 BIN=/opt/etc/init.d/rc.unslung
 # CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
-path=$(uci -q get monlor.$appname.path) 
+path=$(uci -q get monlor.$appname.path) || path="$userdisk/.Entware"
 
 install() {
 
@@ -25,7 +25,7 @@ install() {
 		logsh "【$service】" "未配置安装路径！" 
 		exit
 	fi
-	[ ! -f $BIN ] && mount -o blind $path /opt
+	[ ! -f $BIN ] && mount -o blind $path /opt > /dev/null 2>&1
 	result=$(cat /etc/profile | grep "/opt/sbin" | wc -l)
 	[ "$result" == '0' ] && sed -i "s/PATH=/PATH=\/opt\/bin:\/opt\/sbin:/" /etc/profile
 	result=$(cat /etc/profile | grep "LD_LIBRARY_PATH" | wc -l)
@@ -36,7 +36,7 @@ install() {
 		mkdir -p $path > /dev/null 2>&1
 		[ $? -ne 0 ] && logsh "【Tools】" "创建目录失败，检查你的路径是否正确！" && exit
 		umount -lf /opt > /dev/null 2>&1
-		mount $path /opt
+		mount -o blind $path /opt
 		if [ "$model" == "arm" ]; then
 			wget -O - http://pkg.entware.net/binaries/armv5/installer/entware_install.sh | sh
 		elif [ "$model" == "mips" ]; then
@@ -104,9 +104,11 @@ status() {
 	result1=$(cat /etc/profile | grep -c LD_LIBRARY_PATH)
 	result2=$(cat /etc/profile | grep -c /opt/sbin)
 	if [ ! -f $BIN ] || [ -z $path ] || [ "$result1" == '0' ] || [ "$result2" == '0' ]; then
-		echo -e "0\c"
+		echo "未运行"
+		echo "0"
 	else
-		echo -e "1\c"
+		echo "安装路径: $path"
+		echo "1"
 	fi
 
 }

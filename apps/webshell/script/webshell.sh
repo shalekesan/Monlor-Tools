@@ -12,10 +12,11 @@ appname=webshell
 EXTRA_COMMANDS=" status  version"
 EXTRA_HELP="        status  Get $appname status
         version Get $appname version"
-port=4200
+# port=4200
 BIN=$monlorpath/apps/$appname/bin/$appname
 CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
+port=$(uci -q get monlor.$appname.port) || port=4200
 
 start () {
 
@@ -27,12 +28,13 @@ start () {
 	logsh "【$service】" "正在启动$appname服务... "
 	
 	#iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
-	service_start $BIN -p 4200 -s /:LOGIN -u root  
+	service_start $BIN -p $port -s /:LOGIN -u root  
 	if [ $? -ne 0 ]; then
         logsh "【$service】" "启动$appname服务失败！"
 		exit
     fi
     logsh "【$service】" "启动$appname服务完成！"
+    logsh "【$service】" "请在浏览器访问http://192.168.31.1:4200"
 
 }
 
@@ -57,9 +59,11 @@ status() {
 
 	result=$(ps | grep $BIN | grep -v grep | wc -l)
 	if [ "$result" == '0' ]; then
-		echo -e "0\c"
+		echo "未运行"
+		echo "0"
 	else
-		echo -e "1\c"
+		echo "运行端口号: $port"
+		echo "1"
 	fi
 
 }

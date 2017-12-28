@@ -16,6 +16,8 @@ EXTRA_HELP="        status  Get $appname status
 BIN=$monlorpath/apps/$appname/bin/$appname
 CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
+server=$(uci get monlor.$appname.server)
+server_port=$(uci get monlor.$appname.server_port)
 
 set_config() {
 
@@ -26,8 +28,7 @@ set_config() {
 		logsh "【$service】" "$appname配置出现问题！"
 		exit
 	fi
-	server=$(uci get monlor.$appname.server)
-	server_port=$(uci get monlor.$appname.server_port)
+	
 	token=$(uci get monlor.$appname.token)
 	cat > $CONF <<-EOF
 	[common]
@@ -112,9 +113,11 @@ status() {
 
 	result=$(ps | grep $BIN | grep -v grep | wc -l)
 	if [ "$result" == '0' ]; then
-		echo -e "0\c"
+		echo "未运行"
+		echo "0"
 	else
-		echo -e "1\c"
+		echo "运行服务器: $server:$server_port"
+		echo "1"
 	fi
 
 }

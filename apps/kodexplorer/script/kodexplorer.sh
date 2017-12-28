@@ -12,13 +12,15 @@ appname=kodexplorer
 EXTRA_COMMANDS=" status  version"
 EXTRA_HELP="        status  Get $appname status
         version Get $appname version"
-port=81
+# port=81
 PHPBIN=/opt/bin/spawn-fcgi
 NGINXBIN=/opt/sbin/nginx
 NGINXCONF=/opt/etc/nginx/nginx.conf
 PHPCONF=/opt/etc/php.ini
 WWW=/opt/share/nginx/html
 LOG=/var/log/$appname.log
+path=$(uci -q get monlor.$appname.path) 
+port=$(uci -q get monlor.$appname.port)
 
 set_config() {
 
@@ -30,7 +32,7 @@ set_config() {
 		logsh "【$service】" "修改nginx配置文件"
 		cp $NGINXCONF $NGINXCONF.bak
 		sed -i 's/nobody/root/' $NGINXCONF
-		sed -i 's/listen       80;/listen       81;/' $NGINXCONF
+		sed -i "s/listen       80;/listen       $port;/" $NGINXCONF
 		phpstart=`cat $NGINXCONF | grep -nC 3 fastcgi_index | cut -d- -f1 | head -1`
 		phpend=`cat $NGINXCONF | grep -nC 3 fastcgi_index | cut -d- -f1 | tail -1`
 		[ ! -z "$phpstart" -a ! -z "phpend" ] && sed -i ""$phpstart","$phpend"s/#//g" $NGINXCONF
@@ -59,7 +61,7 @@ set_config() {
 		tar zxvf $WWW/kodexplorer.tar.gz -C $WWW
 		rm -rf $WWW/kodexplorer.tar.gz
 	fi
-	path=$(uci get monlor.$appname.path)
+	
 	logsh "【$service】" "挂载$appname管理目录"
 	if [ ! -z "$path" ]; then
 		if [ -d $WWW/data/User/admin/home ]; then
@@ -108,7 +110,7 @@ start () {
 		exit
     fi
     logsh "【$service】" "$appname服务启动完成"
-    logsh "【$service】" "请在浏览器中访问[http://192.168.31.1:81]配置"
+    logsh "【$service】" "请在浏览器中访问[http://192.168.31.1:$port]配置"
 
 }
 
@@ -135,9 +137,11 @@ status() {
 
 	result=$(ps | grep -E 'nginx|php-cgi' | grep -v sysa | grep -v grep | wc -l)
 	if [ "$result" -lt '5' ]; then
-		echo -e "0\c"
+		echo "未运行"
+		echo "0"
 	else
-		echo -e "1\c"
+		echo "运行端口号: $port, 管理目录: $path"
+		echo "1"
 	fi
 
 }
