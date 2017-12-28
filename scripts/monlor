@@ -97,6 +97,7 @@ menu() {
 					[ "$update" == '1' ] && appmanage.sh upgrade $appname || $appname
 				else
 					$appname
+					uci commit monlor
 				fi
 			else
 				read -p "确定要安装$appname插件？[1/0] " install
@@ -109,7 +110,6 @@ menu() {
 	else
 		echo "输入有误！"
 	fi
-	uci commit monlor
 	read -p "返回主菜单？[1/0] " res
 	if [ `checkread $res` ]; then
 		[ "$res" == '1' ] && menu || exit
