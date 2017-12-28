@@ -43,16 +43,15 @@ fi
 # 	mv $monlorconf $userdisk/.monlor.conf.bak
 # fi
 
-xunlei_enable=$(uci get monlor.tools.xunlei)
+xunlei_enable=$(uci -q get monlor.tools.xunlei)
 if [ "$xunlei_enable" == '1' ]; then
 	logsh "【Tools】" "检测到迅雷被关闭，正在恢复，重启后生效"
 	[ ! -f /usr/sbin/xunlei.sh ] && mv /usr/sbin/xunlei.sh.bak /usr/sbin/xunlei.sh
 fi
 
-rm -rf /userdisk/data/.monlor.log > /dev/null 2>&1
-
 if [ -f "/etc/config/monlor" ]; then
 	rm -rf /etc/config/monlor
+	uci commit
 fi
 
 logsh "【Tools】" "See You!"
