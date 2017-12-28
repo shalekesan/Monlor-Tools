@@ -99,8 +99,8 @@ status() {
 		echo "未运行"
 		echo "0"
 	else
-		flag=", 用户名: $user"
-		echo "运行端口: $port$flag"
+		[ ! -z $user ] && flag=", 用户名: $user"
+		echo "运行端口号: $port$flag"
 		echo "1"
 	fi
 

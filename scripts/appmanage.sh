@@ -64,7 +64,7 @@ add() {
 	#清除临时文件
 	rm -rf /tmp/$appname
 	rm -rf /tmp/$appname.tar.gz
-	logsh "【Tools】" "插件安装完成"
+	logsh "【Tools】" "插件【$appname】安装完成"
 	$monlorconf $appname
 
 }
@@ -95,7 +95,7 @@ upgrade() {
 	[ ! -z "$ssline1" -a ! -z "$ssline2" ] && sed -i ""$ssline1","$ssline2"d" $monlorconf > /dev/null 2>&1
 	#安装服务
 	add $appname
-	logsh "【Tools】" "插件更新完成"
+	logsh "【Tools】" "插件【$appname】更新完成"
 	# result=$(uci -q get monlor.$appname.enable)
 	# if [ "$result" == '1' ]; then
 	# 	logsh "【Tools】" "正在启动【$appname】服务"
@@ -122,7 +122,7 @@ del() {
 	[ ! -z "$ssline1" -a ! -z "$ssline2" ] && sed -i ""$ssline1","$ssline2"d" $monlorconf > /dev/null 2>&1
 	# install_line=`cat $monlorconf | grep -n install_$appname | cut -d: -f1`           
  	# [ ! -z "$install_line" ] && sed -i ""$install_line"s/1/0/" $monlorconf 
-        logsh "【Tools】" "插件卸载完成"
+        logsh "【Tools】" "插件【$appname】卸载完成"
 
 }
  

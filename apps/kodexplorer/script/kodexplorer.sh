@@ -20,7 +20,7 @@ PHPCONF=/opt/etc/php.ini
 WWW=/opt/share/nginx/html
 LOG=/var/log/$appname.log
 path=$(uci -q get monlor.$appname.path) 
-port=$(uci -q get monlor.$appname.port)
+port=$(uci -q get monlor.$appname.port) || port=81
 
 set_config() {
 

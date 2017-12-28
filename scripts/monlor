@@ -64,7 +64,10 @@ manage() {
 			manage
 		;;
 	esac
-			
+	read -p "返回主菜单？[1/0] " res
+	if [ `checkread $res` ]; then
+		[ "$res" == '1' ] && menu || manage
+	fi
 
 
 }
@@ -109,6 +112,10 @@ menu() {
 		fi
 	else
 		echo "输入有误！"
+	fi
+	read -p "返回主菜单？[1/0] " res
+	if [ `checkread $res` ]; then
+		[ "$res" == '1' ] && menu || exit
 	fi
 	uci commit monlor
 

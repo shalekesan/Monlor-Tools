@@ -115,7 +115,7 @@ status() {
 		echo "未运行"
 		echo "0"
 	else
-		echo "运行中"
+		echo "运行端口号: $port"
 		echo "1"
 	fi
 
