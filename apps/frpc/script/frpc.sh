@@ -22,14 +22,14 @@ server_port=$(uci get monlor.$appname.server_port)
 set_config() {
 
 	logsh "【$service】" "生成$appname配置文件"
-	result1=$(uci show monlor.$appname | grep server | wc -l)
+	result1=$(uci -q show monlor.$appname | grep server | wc -l)
 	result2=$(ls $monlorpath/apps/$appname/config | grep frplist | wc -l)
 	if [ "$result1" == '0' -o "$result2" == '0' ]; then
 		logsh "【$service】" "$appname配置出现问题！"
 		exit
 	fi
 	
-	token=$(uci get monlor.$appname.token)
+	token=$(uci -q get monlor.$appname.token)
 	cat > $CONF <<-EOF
 	[common]
 	server_addr = $server
