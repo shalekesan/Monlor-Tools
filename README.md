@@ -13,7 +13,7 @@
 	10. KodExplorer
 	11. EasyExplorer
 	工具箱没有web界面，完全靠Shell开发，插件的安装、卸载、配置由配置文件完成。
-	配置文件也是一个Shell脚本，请按要求正确的修改配置文件。
+	安装完成后执行monlor命令配置工具箱。
 	才疏学浅，但有一颗学习和折腾的心！
 		
 ## 安装方式：  
@@ -26,13 +26,14 @@
 	6. 在线安装插件，下载源coding.net，安装命令appmanage.sh add kms
 
 #### 	懒人一键安装命令
-	curl -skLo /tmp/install.sh https://coding.net/u/monlor/p/Monlor-Tools/git/raw/master/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh && source /etc/profile
+	curl -skLo /tmp/install.sh https://coding.net/u/monlor/p/Monlor-Tools/git/raw/master/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh && source /etc/profile && monlor
 
 ## 工具箱命令：
 	1. 卸载：uninstall.sh
 	2. 更新：update.sh
 	3. 初始化：init.sh 
 	4. 插件管理：appmanage.sh add|upgrade|del appname
+	5. 工具箱配置：monlor
 
 ## 目录结构：  
 	/
@@ -93,4 +94,9 @@
 
 	2017-12-26
 		1. 准备修改工具箱配置文件逻辑，方面各个插件的配置
+
+	2017-12-29
+		1. 更新插件的配置方式，配置插件更容易了，按提示一步一步操作。
+		2. 去除以前的配置文件，新增命令monlor，执行monlor即可轻松配置工具箱，注意Ctrl + c即可退出monlor命令。
+
 
