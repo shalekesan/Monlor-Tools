@@ -13,7 +13,7 @@
 	10. KodExplorer
 	11. EasyExplorer
 	工具箱没有web界面，完全靠Shell开发，插件的安装、卸载、配置由配置文件完成。
-	安装完成后执行monlor命令配置工具箱。
+	安装完成后执行monlor命令配置工具箱，Ctrl + c或者输入exit可以退出。
 	才疏学浅，但有一颗学习和折腾的心！
 		
 ## 安装方式：  

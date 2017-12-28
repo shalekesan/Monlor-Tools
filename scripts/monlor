@@ -85,6 +85,7 @@ menu() {
 	echo
 	read -p "请输入你的选择：" select
 	echo
+	[ "$select" == "exit" ] && exit
 	if [ `echo $select | grep -c '^[0-9][0-9]*$'` -eq 1 ]; then
 		if [ "$select" == '0' ]; then
 			manage
@@ -99,7 +100,7 @@ menu() {
 				fi
 			else
 				read -p "确定要安装$appname插件？[1/0] " install
-				[ "$install" = '1' ] && appmanage.sh add $appname || (menu && return)
+				[ "$install" = '1' ] && appmanage.sh add $appname 
 			fi
 		else 
 			echo "输入有误！"
@@ -144,4 +145,4 @@ check_version() {
 
 }
 
-if [ ! -z $param ]; then $param; else menu; fi #monlor-if
+if [ ! -z $param ]; then $param; else menu; fi; #monlor-if
