@@ -31,7 +31,7 @@ manage() {
 			update.sh
 		;;
 		2)
-			uninstall.sh
+			uninstall.sh && exit
 		;;
 		3)
 			echo "0.返回"
