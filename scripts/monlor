@@ -22,7 +22,8 @@ manage() {
 	[ ! -z "$samba_path" ] && samba_path="$samba_path" || samba_path="未修改"
 	echo "5. 修改samba路径（$samba_path）"
 	hosts=$(uci -q get monlor.tools.hosts)
-	[ "$hosts" == 1 ] && hosts="已修改"　|| hosts="未修改"
+	hostsed=$(cat /etc/hosts | grep -c monlor-hosts)
+	[ "$hosts" == 1 -o "$hostsed" != '0' ] && hosts="已修改"　|| hosts="未修改"
 	echo "6. 修改hosts($hosts)"
 	echo
 	read -p "请输入你的选择：" select
