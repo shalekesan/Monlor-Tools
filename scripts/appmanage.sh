@@ -3,6 +3,7 @@
 logger -p 1 -t "【Tools】" "插件管理脚本appmanage.sh启动..."
 source /etc/monlor/scripts/base.sh
 
+[ -z "$1" -o -z "$2" ] && echo "Usage: $0 {add|upgrade|del} appname" && exit
 addtype=`echo $2 | grep -E "/|\." | wc -l`
 apppath=$(dirname $2) 
 appname=$(basename $2 | cut -d'.' -f1) 
@@ -64,6 +65,10 @@ add() {
 	rm -rf /tmp/$appname/install
 	chmod +x -R /tmp/$appname/
 	cp -rf /tmp/$appname $monlorpath/apps
+	ls /tmp/$appname | while read line
+	do
+		cp -rf /tmp/$appname/$line/* $monlorpath/apps/$appname/$line/
+	done
 	#清除临时文件
 	rm -rf /tmp/$appname
 	rm -rf /tmp/$appname.tar.gz
@@ -134,5 +139,5 @@ case $1 in
 	add) add ;;
 	upgrade) upgrade ;;
 	del) del ;;
-	*) echo "Usage: $0 {add|upgrade|del}"
+	*) echo "Usage: $0 {add|upgrade|del} appname"
 esac
