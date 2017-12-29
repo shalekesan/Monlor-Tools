@@ -21,6 +21,15 @@ if [ ! -z "$samba_path" ]; then
 	fi
 fi
 
+#检查uci变更
+if [ -f "/etc/config/monlor" -a -f "$monlorpath/config/monlor.uci" ]; then
+	md5_1=$(md5sum /etc/config/monlor | cut -d' ' -f1)
+	md5_2=$(md5sum $monlorpath/config/monlor.uci | cut -d' ' -f1)
+	if [ "$md5_1" != "$md5_2" ]; then
+		cp -rf /etc/config/monlor $monlorpath/config/monlor.uci
+	fi
+fi
+
 #监控运行状态
 logger -s -t "【Tools】" "检查插件运行状态"
 cat $monlorpath/config/applist.txt | while read line

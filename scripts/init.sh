@@ -1,7 +1,7 @@
 #!/bin/ash
 #copyright by monlor
 logger -p 1 -t "【Tools】" "初始化脚本init.sh启动..."
-[ ! -f /etc/config/monlor ] && ln -s /etc/monlor/config/monlor.uci /etc/config/monlor && uci commit monlor
+[ ! -f /etc/config/monlor ] && cp -rf /etc/monlor/config/monlor.uci /etc/config/monlor && uci commit monlor
 source /etc/monlor/scripts/base.sh
 mount -o remount,rw /
 

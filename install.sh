@@ -31,7 +31,7 @@ tar -zxvf /tmp/monlor.tar.gz -C /tmp > /dev/null 2>&1
 cp -rf /tmp/monlor /etc
 chmod -R +x /etc/monlor/*
 echo "初始化工具箱..."
-[ ! -f /etc/config/monlor ] && ln -s /etc/monlor/config/monlor.uci /etc/config/monlor
+[ ! -f "/etc/config/monlor" ] && cp -rf /etc/monlor/config/monlor.uci /etc/config/monlor
 uci set monlor.tools.userdisk="$userdisk"
 uci commit monlor
 
