@@ -4,6 +4,7 @@ aria2
 vsftpd
 kms
 frpc
+ngrok
 webshell
 tinyproxy
 entware

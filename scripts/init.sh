@@ -45,7 +45,6 @@ fi
 # fi
 logsh "【Tools】" "获取更新插件列表(每天一次)"
 rm -rf /tmp/applist.txt
-rm -rf /tmp/tools_version.txt
 curl -skLo /tmp/applist.txt $monlorurl/config/applist.txt
 if [ $? -eq 0 ]; then
 	mv /tmp/applist.txt $monlorpath/config
@@ -54,8 +53,9 @@ else
 fi
 
 logsh "【Tools】" "获取插件版本信息"
+rm -rf /tmp/tools_version.txt
 curl -skLo /tmp/tools_version.txt $monlorurl/config/version.txt 
-mkdir -p /tmp/version
+mkdir -p /tmp/version > /dev/null 2>&1
 cat $monlorpath/config/applist.txt | while read line
 do
 	[ ! -z $line ] && curl -skLo /tmp/version/$line.txt $monlorurl/apps/$line/config/version.txt 

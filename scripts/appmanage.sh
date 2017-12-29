@@ -12,7 +12,7 @@ update=0
 
 add() {
 
-	[ `checkuci $appname` -eq 0 -a $update == 0 ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
+	[ `checkuci $appname` -a $update ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
 	if [ "$addtype" == '0' ]; then #检查是否安装在线插件
 		#下载插件
 		logsh "【Tools】" "正在安装【$appname】在线插件..."
