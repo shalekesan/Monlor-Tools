@@ -12,6 +12,8 @@ fi
 # curl -skLo /tmp/install.sh https://coding.net/u/monlor/p/Monlor-Test/git/raw/master/install_test.sh && chmod +x /tmp/install.sh && /tmp/install.sh && source /etc/profile
 
 pack() {
+	rm -rf monlor/
+	rm -rf monlor.tar.gz
 	mkdir -p monlor/apps/
 	cp -rf config/ monlor/config
 	cp -rf scripts/ monlor/scripts
