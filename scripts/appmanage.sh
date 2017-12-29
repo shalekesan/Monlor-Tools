@@ -7,12 +7,12 @@ source /etc/monlor/scripts/base.sh
 addtype=`echo $2 | grep -E "/|\." | wc -l`
 apppath=$(dirname $2) 
 appname=$(basename $2 | cut -d'.' -f1) 
-
+update=0
 [ `checkuci tools` -ne 0 ] && logsh "【Tools】" "工具箱配置文件未创建！" && exit
 
 add() {
 
-	[ -d $monlorpath/apps/$appname ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
+	[ `checkuci $appname` -eq 0 -a $update == 0 ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
 	if [ "$addtype" == '0' ]; then #检查是否安装在线插件
 		#下载插件
 		logsh "【Tools】" "正在安装【$appname】在线插件..."
@@ -98,7 +98,7 @@ upgrade() {
 	ssline2=$(cat $monlorconf | grep -ni "【$appname】" | tail -1 | cut -d: -f1)
 	[ ! -z "$ssline1" -a ! -z "$ssline2" ] && sed -i ""$ssline1","$ssline2"d" $monlorconf > /dev/null 2>&1
 	#安装服务
-	add $appname
+	update=1 && add $appname
 	logsh "【Tools】" "插件【$appname】更新完成"
 	# result=$(uci -q get monlor.$appname.enable)
 	# if [ "$result" == '1' ]; then
