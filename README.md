@@ -7,11 +7,12 @@
 	4. VsFtpd
 	5. Kms
 	6. Frpc
-	7. WebShell
-	8. TinyProxy
-	9. Entware
-	10. KodExplorer
-	11. EasyExplorer
+	7. Ngrok
+	8. WebShell
+	9. TinyProxy
+	10. Entware
+	11. KodExplorer
+	12. EasyExplorer
 	工具箱没有web界面，完全靠Shell开发，插件的安装、卸载、配置由配置文件完成。
 	安装完成后执行monlor命令配置工具箱，Ctrl + c或者输入exit可以退出。
 	才疏学浅，但有一颗学习和折腾的心！
@@ -102,3 +103,4 @@
 
 	2017-12-29
 		1. 修复了更新造成的bug
+		2. 新增插件Ngrok
