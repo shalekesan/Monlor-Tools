@@ -12,7 +12,7 @@ appname=$(basename $2 | cut -d'.' -f1)
 
 add() {
 
-	[ `checkuci $appname` -a "$force" == '0' ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
+	[ $(checkuci $appname) == '0' -a "$force" == '0' ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
 	if [ "$addtype" == '0' ]; then #检查是否安装在线插件
 		#下载插件
 		logsh "【Tools】" "正在安装【$appname】在线插件..."
@@ -75,7 +75,7 @@ add() {
 
 upgrade() {
 	
-	[ `checkuci $appname` -ne 0 -a "$force" == '0' ] && logsh "【Tools】" "【$appname】插件未安装！" && exit
+	[ $(checkuci $appname) != '0' -a "$force" == '0' ] && logsh "【Tools】" "【$appname】插件未安装！" && exit
 	if [ "$force" == '0' ]; then 
 		#检查更新
 		rm -rf /tmp/version.txt
@@ -111,7 +111,7 @@ upgrade() {
 
 del() {
 
-	if [ `checkuci $appname` -ne 0 -a "$force" == '0' ]; then
+	if [ $(checkuci $appname) != '0' -a "$force" == '0' ]; then
 		echo -n "【$appname】插件未安装！继续卸载？[y/n] "
 		read answer
 		[ "$answer" == "n" ] && exit
