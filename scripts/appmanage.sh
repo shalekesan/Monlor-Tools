@@ -12,7 +12,7 @@ appname=$(basename $2 | cut -d'.' -f1)
 
 add() {
 
-	[ `checkuci $appname` -eq 0 ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
+	[ -d $monlorpath/apps/$appname ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
 	if [ "$addtype" == '0' ]; then #检查是否安装在线插件
 		#下载插件
 		logsh "【Tools】" "正在安装【$appname】在线插件..."
@@ -65,10 +65,6 @@ add() {
 	rm -rf /tmp/$appname/install
 	chmod +x -R /tmp/$appname/
 	cp -rf /tmp/$appname $monlorpath/apps
-	ls /tmp/$appname | while read line
-	do
-		cp -rf /tmp/$appname/$line/* $monlorpath/apps/$appname/$line/
-	done
 	#清除临时文件
 	rm -rf /tmp/$appname
 	rm -rf /tmp/$appname.tar.gz
