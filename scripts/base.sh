@@ -48,32 +48,17 @@ logsh() {
 
 monitor() {
 	appname=$1
+	[ `checkuci $appname` ] || return
 	service=`uci -q get monlor.$1.service`
 	if [ -z $appname ] || [ -z $service ]; then
 		logsh "【Tools】" "uci配置出现问题！"
+		return
 	fi
 	App_enable=$(uci -q get monlor.$appname.enable) 
 	result=$($monlorpath/apps/$appname/script/$appname.sh status | tail -1) 
 	process=$(ps | grep {$appname} | grep -v grep | wc -l)
-	# restart=$(uci get monlor.$appname.restart)
-	#执行重启命令
-	# if [ "$restart" == '1' ]; then 
-	# 	logsh "【$service】" "$appname配置已修改，正在重启$appname服务..." 
-	# 	restartline=$(cat $monlorconf | grep -n "$appname"restart | cut -d: -f1) 
-	# 	if [ ! -z $restartline ];then   
-	# 		if [ "$App_enable" == '1' ]; then
-	# 			$monlorpath/apps/$appname/script/$appname.sh restart 
-	# 		else
-	# 			$monlorpath/apps/$appname/script/$appname.sh stop
-	# 		fi
-	# 		sed -i "`expr $restartline + 1`s/.*/\$uciset\.restart=\"0\"/" $monlorconf 
-	# 	else   
-	# 		logsh "【$service】" "$appname配置文件出现问题"
-	# 	fi 
-	# 	return  
-	# fi
+	
 	#检查插件运行异常情况
-	# result=$($monlorpath/apps/$appname/script/$appname.sh status | tail -1) 
 	if [ "$process" != '0' ]; then
 		if [ "$App_enable" == '1' -a "$result" == '0' ]; then
 			logsh "【$service】" "$appname运行异常，正在重启..." 

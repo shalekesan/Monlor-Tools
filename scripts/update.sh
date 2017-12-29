@@ -3,15 +3,17 @@
 source /etc/monlor/scripts/base.sh
 
 logsh "【Tools】" "正在更新工具箱程序... "
-#检查更新
-rm -rf /tmp/version.txt
-curl -skLo /tmp/version.txt $monlorurl/config/version.txt 
-[ $? -ne 0 ] && logsh "【Tools】" "检查更新失败！" && exit
-newver=$(cat /tmp/version.txt)
-oldver=$(cat $monlorpath/config/version.txt)
-logsh "【Tools】" "当前版本$oldver，最新版本$newver"
-[ "$newver" == "$oldver" ] && logsh "【Tools】" "工具箱已经是最新版！" && exit
-logsh "【Tools】" "版本不一致，正在更新工具箱..."
+if [ "$1" != "-f" ]; then
+	#检查更新
+	rm -rf /tmp/version.txt
+	curl -skLo /tmp/version.txt $monlorurl/config/version.txt 
+	[ $? -ne 0 ] && logsh "【Tools】" "检查更新失败！" && exit
+	newver=$(cat /tmp/version.txt)
+	oldver=$(cat $monlorpath/config/version.txt)
+	logsh "【Tools】" "当前版本$oldver，最新版本$newver"
+	[ "$newver" == "$oldver" ] && logsh "【Tools】" "工具箱已经是最新版！" && exit
+	logsh "【Tools】" "版本不一致，正在更新工具箱..."
+fi
 rm -rf /tmp/monlor.tar.gz
 rm -rf /tmp/monlor
 result=$(wget.sh "/tmp/monlor.tar.gz" "$monlorurl/appstore/monlor.tar.gz")

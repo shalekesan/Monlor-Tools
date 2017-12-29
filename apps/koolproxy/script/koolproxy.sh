@@ -157,7 +157,7 @@ load_nat(){
     # 全局模式和视频模式
     iptablenu=$(iptables -t nat -L PREROUTING | awk '/SHADOWSOCKS/{print NR}')
     if [ '$iptablenu' != '' ];then
-        iptablenu=`expr $iptablenu - 1`
+        let iptablenu=$iptablenu-1
     else
         iptablenu=2
     fi
