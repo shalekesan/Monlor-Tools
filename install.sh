@@ -31,7 +31,9 @@ tar -zxvf /tmp/monlor.tar.gz -C /tmp > /dev/null 2>&1
 cp -rf /tmp/monlor /etc
 chmod -R +x /etc/monlor/*
 echo "初始化工具箱..."
-sed -i "s#|||||#$userdisk#" /etc/monlor/config/uciset.sh
+[ ! -f /etc/config/monlor ] && ln -s /etc/monlor/config/monlor.uci /etc/config/monlor
+uci set monlor.tools.userdisk="$userdisk"
+uci commit monlor
 
 # if [ -f "$userdisk/.monlor.conf.bak" ]; then
 # 	echo -n "检测到备份的配置，是否要恢复？[y/n] "

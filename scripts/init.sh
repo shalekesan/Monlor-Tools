@@ -1,6 +1,7 @@
 #!/bin/ash
 #copyright by monlor
 logger -p 1 -t "【Tools】" "初始化脚本init.sh启动..."
+[ ! -f /etc/config/monlor ] && ln -s /etc/monlor/config/monlor.uci /etc/config/monlor && uci commit monlor
 source /etc/monlor/scripts/base.sh
 mount -o remount,rw /
 
@@ -8,11 +9,6 @@ result=`ps | grep init.sh | grep -v grep | wc -l`
 if [ "$result" -gt '2' ]; then
         logsh "【Tools】" "检测到init.sh已在运行"
         exit
-fi
-
-logsh "【Tools】" "检查工具箱uci配置文件"
-if [ ! -f "/etc/config/monlor" ]; then
-	$monlorpath/config/uciset.sh
 fi
 
 logsh "【Tools】" "检查环境变量配置"
@@ -37,6 +33,14 @@ result=$(cat /etc/firewall.user | grep init.sh | wc -l) > /dev/null 2>&1
 if [ "$result" == '0' ]; then
 	echo "$monlorpath/scripts/init.sh" > /etc/firewall.user
 fi
+
+logsh "【Tools】" "检查GitHub的hosts配置"
+result1=$(uci -q get monlor.tools.hosts)
+result2=$(cat /etc/hosts | grep -c "monlor-hosts")
+if [ "$result1" == '1'  ] && [ "$result2" == '0' ]; then
+	cat $monlorpath/config/hosts.txt >> /etc/hosts
+fi
+[ "$result1" == '0' -a "$result2" != '0' ] && sed -i '/monlor-hosts/d' /etc/hosts
 
 # logsh "【Tools】" "检查工具箱配置文件"
 # if [ ! -f "$monlorconf" ]; then

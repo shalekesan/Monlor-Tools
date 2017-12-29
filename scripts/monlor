@@ -21,6 +21,9 @@ manage() {
 	samba_path=$(uci -q get monlor.tools.samba_path)
 	[ ! -z "$samba_path" ] && samba_path="$samba_path" || samba_path="未修改"
 	echo "5. 修改samba路径（$samba_path）"
+	hosts=$(uci -q get monlor.tools.hosts)
+	[ "$hosts" == 1 ] && hosts="已修改"　|| hosts="未修改"
+	echo "6. 修改hosts($hosts)"
 	echo
 	read -p "请输入你的选择：" select
 	case "$select" in
@@ -58,6 +61,14 @@ manage() {
 			[ ! -d "$samba_path" -a ! -z "$samba_path" ] && mkdir -p $samba_path
 			uci set monlor.tools.samba_path="$samba_path"
 		
+		;;
+		6)
+			read -p "确定要增加Github的hosts？[1/0] " res
+			[ `checkuci $res` ] && uci set monlor.tools.hosts="$res"
+			result=$(cat /etc/hosts | grep -c "monlor-hosts")
+			if [ "$res" == '1' -a "$result" == '0' ]; then
+				cat $monlorpath/config/hosts.txt >> /etc/hosts
+			fi
 		;;
 		*)	
 			echo "输入有误！"
