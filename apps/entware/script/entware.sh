@@ -55,7 +55,7 @@ install() {
 
 start () {
 
-	result=$(ps | grep "$appname" | grep -v grep | wc -l)
+	result=$(ps | grep "{$appname}" | grep -v grep | wc -l)
     	if [ "$result" -gt '2' ];then
 		logsh "【$service】" "$appname已经在运行！"
 		exit 1
