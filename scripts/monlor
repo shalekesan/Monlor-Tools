@@ -83,7 +83,7 @@ menu() {
 		echo "$i. $line`check_install $line``check_update $line`"
 	done
 	echo
-	read -p "请输入你的选择：" select
+	read -p "请输入你的选择(exit退出)：" select
 	echo
 	[ "$select" == "exit" ] && exit
 	if [ `echo $select | grep -c '^[0-9][0-9]*$'` -eq 1 ]; then
