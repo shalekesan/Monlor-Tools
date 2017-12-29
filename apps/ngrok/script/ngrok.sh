@@ -18,7 +18,6 @@ CONF=$monlorpath/apps/$appname/config/ngroklist
 LOG=/var/log/$appname.log
 ser_host=$(uci -q get monlor.$appname.ser_host)
 ser_port=$(uci -q get monlor.$appname.ser_port)
-[ -z $ser_host -o -z $ser_port ] && logsh "【$service】" "$appname未配置" && exit
 
 set_config() {
 
@@ -55,7 +54,7 @@ start () {
 		exit 1
 	fi
 	logsh "【$service】" "正在启动$appname服务... "
-
+	[ -z $ser_host -o -z $ser_port ] && logsh "【$service】" "$appname未配置" && exit
 	runstr=`set_config`
 	# iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
 	service_start $runstr

@@ -14,7 +14,6 @@ EXTRA_HELP="        status  Get $appname status
 BIN=$monlorpath/apps/$appname/bin/$appname
 KPCT=$monlorpath/apps/$appname/config/kpcontrol.conf
 koolproxy_policy=`uci -q get monlor.$appname.mode` 
-[ -z $koolproxy_policy ] && logsh "【$service】" "请修改$appname配置文件" && exit
 
 start_koolproxy () {
     logsh "【$service】" "开启$appname主进程..."
@@ -199,7 +198,7 @@ start () {
         logsh "【$service】" "$appname已经在运行！"
         exit
     fi
-
+    [ -z $koolproxy_policy ] && logsh "【$service】" "$appname未配置" && exit
     detect_cert
     start_koolproxy
     add_ipset_conf && restart_dnsmasq

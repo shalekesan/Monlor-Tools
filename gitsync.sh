@@ -46,19 +46,19 @@ localgit() {
 github() {
 	git remote rm origin
 	git remote add origin https://github.com/monlor/Monlor-Tools.git
-	git push origin master
+	git push origin master -f
 }
 
 coding() {
 	git remote rm origin
 	git remote add origin https://git.coding.net/monlor/Monlor-Tools.git
-	git push origin master
+	git push origin master -f
 }
 
 test() {
 	git remote rm origin
 	git remote add origin https://git.coding.net/monlor/Monlor-Test.git
-	git push origin master
+	git push origin master -f
 }
 
 case $1 in 

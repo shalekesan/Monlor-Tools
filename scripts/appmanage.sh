@@ -76,16 +76,18 @@ add() {
 upgrade() {
 	
 	[ `checkuci $appname` -ne 0 ] && logsh "【Tools】" "【$appname】插件未安装！" && exit
-	#检查更新
-	rm -rf /tmp/version.txt
-	curl -skLo /tmp/version.txt $monlorurl/apps/$appname/config/version.txt 
-	[ $? -ne 0 ] && logsh "【Tools】" "检查更新失败！" && exit
-	newver=$(cat /tmp/version.txt)
-	oldver=$(cat $monlorpath/apps/$appname/config/version.txt) > /dev/null 2>&1
-	[ $? -ne 0 ] && logsh "【Tools】" "$appname文件出现问题，请卸载后重新安装" && exit
-	logsh "【Tools】" "当前版本$oldver，最新版本$newver"
-	[ "$newver" == "$oldver" ] && logsh "【Tools】" "【$appname】已经是最新版！" && exit
-	logsh "【Tools】" "版本不一致，正在更新$appname插件... "
+	if [ "$1" != "-f" ]; then 
+		#检查更新
+		rm -rf /tmp/version.txt
+		curl -skLo /tmp/version.txt $monlorurl/apps/$appname/config/version.txt 
+		[ $? -ne 0 ] && logsh "【Tools】" "检查更新失败！" && exit
+		newver=$(cat /tmp/version.txt)
+		oldver=$(cat $monlorpath/apps/$appname/config/version.txt) > /dev/null 2>&1
+		[ $? -ne 0 ] && logsh "【Tools】" "$appname文件出现问题，请卸载后重新安装" && exit
+		logsh "【Tools】" "当前版本$oldver，最新版本$newver"
+		[ "$newver" == "$oldver" ] && logsh "【Tools】" "【$appname】已经是最新版！" && exit
+		logsh "【Tools】" "版本不一致，正在更新$appname插件... "
+	fi
 	#卸载插件
 	$monlorpath/apps/$appname/script/$appname.sh stop > /dev/null 2>&1
 	#删除插件的配置
@@ -133,7 +135,7 @@ del() {
 
 case $1 in
 	add) add ;;
-	upgrade) upgrade ;;
+	upgrade) upgrade $3 ;;
 	del) del ;;
 	*) echo "Usage: $0 {add|upgrade|del} appname"
 esac
