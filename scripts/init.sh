@@ -58,7 +58,7 @@ curl -skLo /tmp/tools_version.txt $monlorurl/config/version.txt
 mkdir -p /tmp/version
 cat $monlorpath/config/applist.txt | while read line
 do
-	curl -skLo /tmp/version/$line.txt $monlorurl/apps/$line/config/version.txt 
+	[ ! -z $line ] && curl -skLo /tmp/version/$line.txt $monlorurl/apps/$line/config/version.txt 
 done
 
 

@@ -57,6 +57,9 @@ add() {
 	#初始化uci配置	
 	uci set monlor.$appname=config
 	echo " [ \`uci get monlor.$appname.enable\` -eq 1 ] && $monlorpath/apps/$appname/script/$appname.sh restart" >> $monlorpath/scripts/dayjob.sh
+	#添加版本信息
+	[ ! -d /tmp/version ] && mkdir -p /tmp/version
+	cp -rf /tmp/$appname/config/version.txt /tmp/version
 	#安装插件
 	rm -rf /tmp/$appname/install
 	chmod +x -R /tmp/$appname/

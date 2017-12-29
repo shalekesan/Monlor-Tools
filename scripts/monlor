@@ -79,8 +79,10 @@ menu() {
 	echo "0. 工具箱/插件管理(Ctrl + c退出)"
 	cat $Applist | while read line
 	do
-		let i=$i+1
-		echo "$i. $line`check_install $line``check_update $line`"
+		if [ ! -z $line ]; then
+			let i=$i+1
+			echo "$i. $line`check_install $line``check_update $line`"
+		fi
 	done
 	echo
 	read -p "请输入你的选择(exit退出)：" select
