@@ -1,18 +1,17 @@
 # Monlor-Tools
 	工具箱正处于测试状态，需要安装的注意一下，要有一定的动手能力，出问题会用U盘刷固件。
 	目前支持了以下几种插件:
-	1. [ShadowSocks](https://github.com/shadowsocks/shadowsocks/tree/master,"ShadowSocks")
-	2. [KoolProxy](http://koolshare.cn/thread-64086-1-1.html,"KoolProxy")
-	3. [Aria2](https://github.com/aria2/aria2,"Aria2")
-	4. [VsFtpd](https://security.appspot.com/vsftpd.html#docs,"VsFtpd")
-	5. [Kms](https://github.com/Wind4/vlmcsd,"Kms")
-	6. [Frpc](https://github.com/fatedier/frp,"Frpc")
-	7. [Ngrok](https://github.com/dosgo/ngrok-c,"Ngrok")
-	8. [WebShell](https://github.com/shellinabox/shellinabox,"WebShell")
-	9. [TinyProxy](https://github.com/tinyproxy/tinyproxy,"TinyProxy")
-	10. [Entware](https://github.com/Entware-ng/Entware-ng,"Entware")
-	11. [KodExplorer](https://github.com/kalcaddle/KodExplorer,"KodExplorer")
-	12. [EasyExplorer](http://koolshare.cn/thread-129199-1-1.html,"EasyExplorer")
+	1. ShadowSocks
+	2. KoolProxy
+	3. Aria2
+	4. VsFtpd
+	5. Kms
+	6. Frpc
+	7. WebShell
+	8. TinyProxy
+	9. Entware
+	10. KodExplorer
+	11. EasyExplorer
 	工具箱没有web界面，完全靠Shell开发，插件的安装、卸载、配置由配置文件完成。
 	安装完成后执行monlor命令配置工具箱，Ctrl + c或者输入exit可以退出。
 	才疏学浅，但有一颗学习和折腾的心！
@@ -27,7 +26,7 @@
 	6. 在线安装插件，下载源coding.net，安装命令appmanage.sh add kms
 
 #### 	懒人一键安装命令
-	curl -skLo /tmp/install.sh https://coding.net/u/monlor/p/Monlor-Tools/git/raw/master/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh && source /etc/profile
+	curl -skLo /tmp/install.sh https://coding.net/u/monlor/p/Monlor-Tools/git/raw/master/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh && source /etc/profile && monlor
 
 ## 工具箱命令：
 	1. 卸载：uninstall.sh
