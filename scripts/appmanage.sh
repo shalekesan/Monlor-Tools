@@ -7,12 +7,12 @@ source /etc/monlor/scripts/base.sh
 addtype=`echo $2 | grep -E "/|\." | wc -l`
 apppath=$(dirname $2) 
 appname=$(basename $2 | cut -d'.' -f1) 
-update=0
+[ "$3" == "-f" ] && force=1 || force=0
 [ `checkuci tools` -ne 0 ] && logsh "【Tools】" "工具箱配置文件未创建！" && exit
 
 add() {
 
-	[ `checkuci $appname` -a $update ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
+	[ `checkuci $appname` -a "$force" == '0' ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
 	if [ "$addtype" == '0' ]; then #检查是否安装在线插件
 		#下载插件
 		logsh "【Tools】" "正在安装【$appname】在线插件..."
@@ -75,8 +75,8 @@ add() {
 
 upgrade() {
 	
-	[ `checkuci $appname` -ne 0 ] && logsh "【Tools】" "【$appname】插件未安装！" && exit
-	if [ "$1" != "-f" ]; then 
+	[ `checkuci $appname` -ne 0 -a "$force" == '0' ] && logsh "【Tools】" "【$appname】插件未安装！" && exit
+	if [ "$force" == '0' ]; then 
 		#检查更新
 		rm -rf /tmp/version.txt
 		curl -skLo /tmp/version.txt $monlorurl/apps/$appname/config/version.txt 
@@ -100,7 +100,7 @@ upgrade() {
 	ssline2=$(cat $monlorconf | grep -ni "【$appname】" | tail -1 | cut -d: -f1)
 	[ ! -z "$ssline1" -a ! -z "$ssline2" ] && sed -i ""$ssline1","$ssline2"d" $monlorconf > /dev/null 2>&1
 	#安装服务
-	update=1 && add $appname
+	force=1 && add $appname
 	logsh "【Tools】" "插件【$appname】更新完成"
 	# result=$(uci -q get monlor.$appname.enable)
 	# if [ "$result" == '1' ]; then
@@ -111,7 +111,7 @@ upgrade() {
 
 del() {
 
-	if [ `checkuci $appname` -ne 0 ]; then
+	if [ `checkuci $appname` -ne 0 -a "$force" == '0' ]; then
 		echo -n "【$appname】插件未安装！继续卸载？[y/n] "
 		read answer
 		[ "$answer" == "n" ] && exit
@@ -135,7 +135,7 @@ del() {
 
 case $1 in
 	add) add ;;
-	upgrade) upgrade $3 ;;
+	upgrade) upgrade ;;
 	del) del ;;
 	*) echo "Usage: $0 {add|upgrade|del} appname"
 esac
